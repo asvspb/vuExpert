@@ -26,74 +26,74 @@
 </template>
 
 <script>
-import DatabaseExample from './components/DatabaseExample.vue'
-import Documentation from './components/Documentation.vue'
+  import DatabaseExample from './components/DatabaseExample.vue'
+  import Documentation from './components/Documentation.vue'
 
-export default {
- name: 'App',
- components: {
-   DatabaseExample,
-   Documentation
- }
-}
+  export default {
+  name: 'App',
+  components: {
+    DatabaseExample,
+    Documentation
+  }
+  }
 </script>
 
 <style lang="scss">
-@use './styles/variables.scss' as *;
-@use './styles/mixins.scss' as *;
+  @use './styles/variables.scss' as *;
+  @use './styles/mixins.scss' as *;
 
-#app {
- font-family: Avenir, Helvetica, Arial, sans-serif;
- -webkit-font-smoothing: antialiased;
- -moz-osx-font-smoothing: grayscale;
- text-align: center;
- color: $primary-text-color;
- margin-top: 60px;
-padding: 0 20px;
-}
+  #app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: $primary-text-color;
+    margin-top: 60px;
+    padding: 0 20px;
+  }
 
-.example-container {
- @include container(800px);
- @include shadow(2);
- margin: 20px auto;
- padding: $padding-medium;
- border: 1px solid $border-color;
- border-radius: $border-radius;
- background-color: $background-color;
-}
+  .example-container {
+    @include container(800px);
+    @include shadow(2);
+    margin: 20px auto;
+    padding: $padding-medium;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    background-color: $background-color;
+  }
 
-.scss-example {
- font-size: $font-size-large;
- color: $accent-color;
- margin: 15px 0;
- @include responsive-font($font-size-medium, $font-size-large);
-}
+  .scss-example {
+    font-size: $font-size-large;
+    color: $accent-color;
+    margin: 15px 0;
+    @include responsive-font($font-size-medium, $font-size-large);
+  }
 
-.nested-example {
-padding: $padding-medium;
- background-color: $secondary-background;
- border-radius: $border-radius;
- margin-top: $padding-medium;
+  .nested-example {
+    padding: $padding-medium;
+    background-color: $secondary-background;
+    border-radius: $border-radius;
+    margin-top: $padding-medium;
 
- p {
-   margin: 10px 0;
-   font-weight: bold;
- }
+  p {
+    margin: 10px 0;
+    font-weight: bold;
+  }
 
- .custom-button {
-   @include button-style($button-bg-color);
-   padding: 10px 20px;
-   font-size: $font-size-medium;
- }
-}
+  .custom-button {
+    @include button-style($button-bg-color);
+    padding: 10px 20px;
+    font-size: $font-size-medium;
+  }
+  }
 
-h1 {
- @include responsive-font($font-size-large, $font-size-xlarge);
- @include gradient(#f8f9fa, #e9ecef);
- -webkit-background-clip: text;
- -webkit-text-fill-color: transparent;
- background-clip: text;
- margin-bottom: 20px;
- padding: 10px;
-}
+  h1 {
+    @include responsive-font($font-size-large, $font-size-xlarge);
+    @include gradient(#f8f9fa, #e9ecef);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    padding: 10px;
+  }
 </style>
