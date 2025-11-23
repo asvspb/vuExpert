@@ -17,6 +17,15 @@
 *Цель: Перестать думать прямыми манипуляциями DOM (jQuery-style) и начать мыслить состоянием.*
 
 ### ⚡️ Модуль V1. Ментальная модель и SFC
+
+Короткий пример `<script setup>`:
+```vue
+<script setup>
+import { ref, computed } from 'vue'
+const message = ref('Привет, Vue!')
+const reversed = computed(() => message.value.split('').reverse().join(''))
+</script>
+```
 **Метафора:** "HTML, JS и CSS в одной капсуле".
 *   **1.1. Single File Component (.vue):**
     *   Структура: `<script setup>`, `<template>`, `<style scoped>`.
