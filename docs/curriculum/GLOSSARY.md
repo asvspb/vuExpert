@@ -1,6 +1,6 @@
 # Глоссарий курса (очень подробный)
 
-Назначение: единый справочник терминов и понятий, встречающихся в учебном проекте и материалах. Структурирован по областям: общие веб‑понятия, фронтенд, бэкенд, базы данных, кэш/брокеры, тестирование, инфраструктура, безопасность и процессы разработки.
+Назначение: единый справочник терминов и понятий, встречающихся в учебном проекте и материалах. Структурирован по областям: общие веб‑понятия, фронтенд, бэкенд, базы данных, кэш/брокеры, тестирование, инфраструктура (CI/CD), безопасность и процессы разработки.
 
 Формат: краткое определение + контекст использования в курсе + при необходимости — отсылки на документы в `docs/curriculum`.
 
@@ -17,26 +17,27 @@
 
 ## 2) Frontend (Vue, Vite, стили)
 - Vue 3: прогрессивный фреймворк для интерфейсов. В курсе — только Composition API и `<script setup>`.
-- Composition API: модель декларативного описания логики через `ref`, `reactive`, `computed`, `watch`, хуки жизненного цикла.
-- `<script setup>`: синтаксический сахар для SFC — автоимпорты, лаконичный код без `export default`.
+- Composition API: декларативная модель через `ref`, `reactive`, `computed`, `watch`, хуки жизненного цикла.
+- `<script setup>`: синтаксический сахар для SFC — лаконичный код без `export default`.
 - SFC (Single File Component): единый файл с `<template>`, `<script>`, `<style>`.
 - Props/Emits: входные параметры и события компонента.
 - Vite: сборщик и dev‑сервер. Порты dev: 5173; preview: 4173. Переменные среды — `import.meta.env`.
 - Env переменные фронта: префикс `VITE_` (например, `VITE_API_BASE_URL`) — доступны в клиентском коде.
 - SCSS (Sass): надстройка над CSS с переменными, миксинами, вложенностью. В проекте — каталог `src/styles`.
-- BEM (Block–Element–Modifier): методология нейминга классов (`block__element--modifier`) для читаемых и масштабируемых стилей.
+- BEM (Block–Element–Modifier): методология нейминга классов (`block__element--modifier`) для читаемых и масштабируемых стилей. См. [bem.md](./bem.md).
 - CSS‑модули/Scoped styles: механизмы изоляции стилей в SFC. В курсе акцент на `scoped` + BEM.
-- SPA (Single Page Application): приложение, работающее в одном документе, обновляет UI без полной перезагрузки.
+- SPA: приложение, работающее в одном документе, обновляет UI без полной перезагрузки.
 - SSR/SSG: серверный/статический рендеринг. Отдельный модуль — Nuxt (опционально).
 
 ## 3) Backend (FastAPI, Pydantic, SQLAlchemy)
-- FastAPI: фреймворк для создания быстрых API на Python. Аннотации типов → валидация и OpenAPI.
+- FastAPI: фреймворк для быстрых API на Python. Аннотации типов → валидация и OpenAPI.
 - Pydantic (v2): библиотека валидации и сериализации данных. В курсе — модели схем ввода/вывода (`schemas.py`).
 - Dependency Injection (DI): внедрение зависимостей через параметры функций/эндпоинтов. В FastAPI — `Depends`.
+- APIRouter: механизм модульного роутинга в FastAPI (`from fastapi import APIRouter`), позволяет разделять эндпоинты по модулям и подключать их в `main`. Целевой рефакторинг.
 - Middleware: прослойки обработки запросов/ответов, например, CORS.
 - Uvicorn: ASGI‑сервер для запуска FastAPI.
 - Lifespan/startup/shutdown: механизм инициализации/освобождения ресурсов при старте/остановке приложения.
-- httpx: клиент HTTP для тестов и утилит. В курсе — `httpx.AsyncClient` для интеграционных тестов FastAPI.
+- httpx: HTTP‑клиент для тестов и утилит. В курсе — `httpx.AsyncClient` для интеграционных тестов FastAPI.
 - Redis (клиент): `redis.asyncio` — асинхронный клиент Redis; используется для `/counter`, health‑check.
 - python‑dotenv: загрузка переменных окружения из `.env` (приоритет OS env > .env > дефолты в коде).
 
@@ -46,7 +47,10 @@
 - AsyncSession: единица работы с ORM (операции CRUD, транзакции). Создаётся через `async_sessionmaker`.
 - Транзакция: атомарная последовательность операций; в SQLAlchemy — `session.begin()`/контекст менеджер.
 - Миграции: управление версией схемы БД; в курсе — Alembic.
-- Eager/Lazy loading: стратегии загрузки связанных данных (например, `selectinload`, `joinedload`).
+- Ревизия Alembic: файл‑описание изменения схемы (upgrade/downgrade). См. [alembic_cookbook.md](./alembic_cookbook.md).
+- asyncpg: драйвер PostgreSQL для async‑стека.
+- aiosqlite: драйвер SQLite для async‑стека.
+- Eager/Lazy loading: стратегии загрузки связанных данных (`selectinload`, `joinedload`).
 - Expire on commit: флаг инвалидации полей ORM после коммита; по умолчанию True, часто отключают.
 
 ## 5) Базы данных
@@ -66,37 +70,51 @@
 - Unit‑тесты: тесты маленьких единиц логики (функции/компоненты). Фронт — Vitest.
 - Интеграционные тесты: тесты связей между модулями/слоями. Бэк — Pytest + httpx.AsyncClient.
 - E2E тесты (End‑to‑End): проверяют сценарии пользователя в браузере. В курсе — Playwright.
-- Pytest: фреймворк тестов. Плагины: `pytest‑asyncio`.
+- Pytest: фреймворк тестов. Плагины: `pytest‑asyncio`, `pytest‑cov` (покрытие).
 - Фикстуры: механизмы подготовки/освобождения ресурсов для тестов (session/module/function scope).
-- Testcontainers: запуск реальных сервисов (Postgres/Redis) в контейнерах на время тестов.
-- Coverage (покрытие): метрика доли кода, исполненного тестами.
+- Testcontainers: запуск реальных сервисов (Postgres/Redis) в контейнерах на время тестов. См. [testcontainers_advanced.md](./testcontainers_advanced.md).
+- Coverage (покрытие): доля кода, исполненного тестами. Пороги покрытия задаются в CI и vitest.config.js.
+- Vitest: тестовый раннер для Vue/TS проектов (аналог Jest). Поддерживает покрытие (`@vitest/coverage-v8`).
+- Playwright: e2e‑раннер, управляет браузерами. Базовый URL задается через `PW_BASE_URL`.
 
-## 8) Инфраструктура и Docker
+## 8) Инфраструктура, Docker, CI/CD
 - Docker: контейнеризация приложений. Dockerfile — рецепт образа.
 - Docker Compose: оркестрация многоконтейнерных приложений локально.
-- Healthcheck: механизм проверки готовности сервиса (например, `/health`). Можно описывать в Compose и Dockerfile.
+- Healthcheck: проверка готовности сервиса (например, `/health`). Описывается в Compose и Dockerfile.
 - Volume: том для устойчивого хранения данных БД.
 - Network: виртуальная сеть между сервисами в Compose.
 - Entrypoint/CMD: команды запуска контейнера.
+- GitHub Actions: менеджер CI/CD‑конвейеров. Конфигурация — YAML‑workflow в `.github/workflows`.
+- Workflow: файл описания пайплайна (триггеры, jobs, permissions).
+- Job: логический этап (выполняется на отдельном раннере/ВМ).
+- Step: отдельное действие в job (checkout, setup, run tests и т. п.).
+- Artifact: артефакт сборки/покрытия/логов, загружаемый из CI.
+- Cache: кэш зависимостей (npm/pip) для ускорения сборки.
+- Matrix build: прогон сборки по матрице версий (Node 18/20 и т. д.).
+- ESLint: линтер JS/TS кода. Prettier: форматтер.
+- Ruff/Flake8: линтеры Python кода.
+- wait-on: утилита ожидания готовности сервиса (используется для preview на 4173 перед e2e).
+- Coverage thresholds: пороги покрытия (vitest.config.js, `--cov-fail-under`).
 
 ## 9) Переменные окружения и конфигурация
 - Переменные окружения (env vars): конфигурация через OS‑переменные. На фронте доступны только с префиксом `VITE_`.
 - `.env`/`python‑dotenv`: файл локальной конфигурации и библиотека загрузки.
 - `VITE_API_BASE_URL`: базовый URL API для фронта. Влияет на `fetch`/`axios`/`$fetch`.
 - `PW_BASE_URL`: базовый URL для Playwright.
-- `DATABASE_URL`/`SQLITE_PATH`: параметры БД в бэкенде.
+- `DATABASE_URL`/`SQLITE_PATH`: параметры БД в бэкенде (приоритет `DATABASE_URL`).
 - `REDIS_HOST`/`REDIS_PORT`: параметры Redis.
 
 ## 10) Безопасность
 - CORS: политика кросс‑доменных запросов. В курсе — whitelist `http://localhost:5173` и `http://localhost:4173` (и `:3000` при Nuxt).
 - CSP (Content Security Policy): политика безопасности контента. В прод — ограничение источников скриптов/ресурсов.
 - Валидация: проверка входных данных (Pydantic). Защита от XSS/SQL injection — на уровне валидации/ORM/шаблонов.
-- Rate limit (ограничение частоты): можно реализовать на Redis (продвинутый модуль).
+- Rate limit: ограничение частоты, можно реализовать на Redis (продвинутый модуль).
 
 ## 11) Процессы разработки
 - Git workflow: ветки, PR, code review.
-- Docs‑Driven: документация определяет ожидаемое поведение (наш учебник).
-- CI/CD: пайплайн, который собирает, тестирует, прогоняет миграции (базовый обзор в курсе).
+- Docs‑Driven: документация задает ожидаемое поведение (наш учебник).
+- CI/CD: пайплайн, который собирает, тестирует, прогоняет миграции (см. [cicd.md](./cicd.md)).
+- Confluence/Jira: системы документации и трекинга задач (на выбор команды; опционально).
 
 ## 12) Nuxt (опционально)
 - Nuxt: метафреймворк для Vue с SSR/SSG/Hybrid режимами.
@@ -105,7 +123,7 @@
 - `$fetch`/`useFetch`: универсальные способы запросов с учётом SSR.
 
 ## 13) Полезные понятия и приёмы
-- Локальный/предпросмотровый режим (Vite dev/preview): разные порты, разная статика/оптимизация.
+- Dev/Preview режимы (Vite): разные порты, разная статика/оптимизация.
 - Base URL (Playwright): конфиг по умолчанию и переключение через `PW_BASE_URL`.
 - Кэширование: хранение часто используемых данных в памяти/Redis.
 - Идempotентность: свойство операции не менять результат при повторе (важно для некоторых API).
@@ -117,7 +135,7 @@
 - Frontend: [vue.md](./vue.md), [vite.md](./vite.md), [css.md](./css.md), [bem.md](./bem.md)
 - Backend: [fastapi.md](./fastapi.md), [sqlite.md](./sqlite.md), [sqlalchemy_async.md](./sqlalchemy_async.md), [redis.md](./redis.md)
 - Тестирование: [tests.md](./tests.md), [httpx_essentials.md](./httpx_essentials.md), [testcontainers_advanced.md](./testcontainers_advanced.md)
-- Инфраструктура: [docker.md](./docker.md), [docker_healthcheck.md](./docker_healthcheck.md)
+- Инфраструктура и CI/CD: [docker.md](./docker.md), [docker_healthcheck.md](./docker_healthcheck.md), [cicd.md](./cicd.md)
 - Миграции и БД: [postgres.md](./postgres.md), [alembic_cookbook.md](./alembic_cookbook.md)
 - Конфигурация и безопасность: [python-dotenv.md](./python-dotenv.md), [security.md](./security.md)
 - Дополнительно: (nuxt.md — при добавлении)
