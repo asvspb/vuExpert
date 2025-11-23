@@ -22,7 +22,7 @@ REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 app = FastAPI(title="VueExpert Backend", version="0.1.0")
 
 # Получаем разрешенные источники из переменной окружения
-cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:4173").split(",")
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:4173,http://localhost:5173").split(",")
 
 app.add_middleware(
     CORSMiddleware,

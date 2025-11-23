@@ -196,48 +196,45 @@ async def stream_code(websocket: WebSocket):
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 
-export default {
-  name: 'AICodeAssistant',
-  setup() {
-    const messages = ref([]);
-    const userInput = ref('');
-    const isGenerating = ref(false);
-    const isConnected = ref(false);
-    const websocket = ref(null);
-    
-    const connectWebSocket = () => {
-      try {
-        websocket.value = new WebSocket('ws://localhost:8000/api/ai/stream-code');
-        
-        websocket.value.onopen = () => {
-          isConnected.value = true;
-          console.log('Connected to Qwen-Coder');
-        };
-        
-        websocket.value.onmessage = (event) => {
-          const data = JSON.parse(event.data);
-          if (data.error) {
-            messages.value.push({ role: 'system', content: `Error: ${data.error}` });
-            isGenerating.value = false;
-          } else {
-            // Обработка потоковых данных
-            if (messages.value.length > 0 && messages.value[messages.value.length - 1].role === 'assistant') {
-              messages.value[messages.value.length - 1].content += data;
-            } else {
-              messages.value.push({ role: 'assistant', content: data });
-            }
-          }
-        };
-        
-        websocket.value.onclose = () => {
-          isConnected.value = false;
-          console.log('Disconnected from Qwen-Coder');
-        };
-        
-        websocket.value.onerror = (error) => {
+const messages = ref([]);
+const userInput = ref('');
+const isGenerating = ref(false);
+const isConnected = ref(false);
+const websocket = ref(null);
+
+const connectWebSocket = () => {
+  try {
+    websocket.value = new WebSocket('ws://localhost:8000/api/ai/stream-code');
+
+    websocket.value.onopen = () => {
+      isConnected.value = true;
+      console.log('Connected to Qwen-Coder');
+    };
+
+    websocket.value.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.error) {
+        messages.value.push({ role: 'system', content: `Error: ${data.error}` });
+        isGenerating.value = false;
+      } else {
+        // Обработка потоковых данных
+        if (messages.value.length > 0 && messages.value[messages.value.length - 1].role === 'assistant') {
+          messages.value[messages.value.length - 1].content += data;
+        } else {
+          messages.value.push({ role: 'assistant', content: data });
+        }
+      }
+    };
+
+    websocket.value.onclose = () => {
+      isConnected.value = false;
+      console.log('Disconnected from Qwen-Coder');
+    };
+
+    websocket.value.onerror = (error) => {
           console.error('WebSocket error:', error);
           isConnected.value = false;
         };

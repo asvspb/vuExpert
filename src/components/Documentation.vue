@@ -17,7 +17,7 @@
       <h3>Примеры использования</h3>
       <div class="code-example">
         <pre><code>
-// Объявление компонента
+// Объявление компонента (Options API — для сравнения)
 export default {
   name: 'MyComponent',
   data() {
@@ -165,10 +165,8 @@ ZRANGE leaderboard 0 -1 WITHSCORES
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Documentation'
-}
+<script setup>
+// Компонент статический, логики нет — используем `<script setup>` для единообразия
 </script>
 
 <style lang="scss">

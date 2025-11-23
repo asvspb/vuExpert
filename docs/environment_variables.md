@@ -10,7 +10,8 @@
 ## Бэкенд (backend/.env)
 
 ### Конфигурация базы данных
-- `SQLITE_PATH` - путь к файлу SQLite базы данных (по умолчанию: /app/data/db.sqlite)
+- `DATABASE_URL` - универсальная строка подключения. Если задана — имеет приоритет. Пример для Postgres: postgresql+asyncpg://user:pass@db:5432/app
+- `SQLITE_PATH` - путь к файлу SQLite базы данных (по умолчанию: /app/data/db.sqlite). Используется по умолчанию в учебном режиме.
 
 ### Конфигурация Redis
 - `REDIS_HOST` - хост Redis (по умолчанию: redis)
@@ -26,8 +27,11 @@
 
 ## Фронтенд (.env)
 
-- `VITE_API_URL` - URL для API бэкенда (по умолчанию: http://localhost:8000)
+- `VITE_API_BASE_URL` - базовый URL для API бэкенда (по умолчанию: http://localhost:8000)
 - `VITE_APP_TITLE` - заголовок приложения (по умолчанию: "Vue Expert App")
+
+### End-to-end тесты (Playwright)
+- `PW_BASE_URL` - базовый URL для запуска E2E тестов (по умолчанию: http://localhost:5173). Для docker preview можно установить http://localhost:4173.
 
 ## Использование
 

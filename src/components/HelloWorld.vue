@@ -2,17 +2,14 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <p>{{ description }}</p>
- </div>
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String,
-    description: String
-  }
-}
+<script setup>
+const props = defineProps({
+  msg: String,
+  description: String,
+})
 </script>
 
 <style scoped>

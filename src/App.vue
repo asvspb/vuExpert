@@ -9,7 +9,7 @@
       <li><strong>SCSS</strong> - метаязык на основе CSS, добавляющий улучшения к стандартному CSS</li>
     </ul>
     <p>Все компоненты проекта будут созданы с нуля, чтобы вы могли понять каждую часть системы.</p>
-    
+
     <div class="example-container">
       <h2>Пример использования SCSS</h2>
       <p class="scss-example">Этот текст стилизован с использованием SCSS</p>
@@ -18,24 +18,16 @@
         <button class="custom-button">Нажми меня</button>
       </div>
     </div>
-    
+
     <DatabaseExample />
-    
+
     <Documentation />
   </div>
 </template>
 
-<script>
-  import DatabaseExample from './components/DatabaseExample.vue'
-  import Documentation from './components/Documentation.vue'
-
-  export default {
-  name: 'App',
-  components: {
-    DatabaseExample,
-    Documentation
-  }
-  }
+<script setup>
+import Documentation from './components/Documentation.vue'
+import DatabaseExample from './components/DatabaseExample.vue'
 </script>
 
 <style lang="scss">

@@ -1,18 +1,15 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 
-test('has title', async ({ page }) => {
-  // Navigate to your application's URL
-  await page.goto('http://localhost:5173/');
+// Tests use baseURL from playwright.config.js (PW_BASE_URL or default http://localhost:5173)
 
-  // Expect the title to contain "Vue"
+test('has title', async ({ page }) => {
+  await page.goto('/');
   await expect(page).toHaveTitle(/Vue/);
 });
 
 test('has main heading', async ({ page }) => {
-  await page.goto('http://localhost:5173/');
-
-  // Check for the presence of the main heading
+  await page.goto('/');
   const heading = page.locator('h1');
   await expect(heading).toBeVisible();
   await expect(heading).toContainText('Добро пожаловать');

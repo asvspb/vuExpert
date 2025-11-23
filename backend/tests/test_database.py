@@ -1,51 +1,67 @@
+import os
+import tempfile
 import pytest
-from testcontainers.postgres import PostgresContainer
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.database import get_db
-from app.models import Base
+from typing import AsyncGenerator
+
+import httpx
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy import text
+
 from app.main import app
-from fastapi.testclient import TestClient
+from app.database import Base, get_db
+
+pytestmark = pytest.mark.asyncio
 
 
 @pytest.fixture(scope="session")
-def postgres_container():
-    with PostgresContainer("postgres:15") as postgres:
-        yield postgres
-
-
-@pytest.fixture(scope="session")
-def db_engine(postgres_container):
-    engine = create_engine(postgres_container.get_connection_url())
-    Base.metadata.create_all(engine)
-    return engine
-
-
-@pytest.fixture(scope="function")
-def db_session(db_engine):
-    connection = db_engine.connect()
-    transaction = connection.begin()
-    yield sessionmaker(bind=connection)()
-    transaction.rollback()
-    connection.close()
-
-
-@pytest.fixture(scope="function")
-def client(db_session):
-    def override_get_db():
+def tmp_sqlite_file():
+    fd, path = tempfile.mkstemp(prefix="tmp_rovodev_test_", suffix=".sqlite")
+    os.close(fd)
+    try:
+        yield path
+    finally:
         try:
-            yield db_session
-        finally:
+            os.remove(path)
+        except FileNotFoundError:
             pass
 
+
+@pytest.fixture(scope="session")
+async def test_engine(tmp_sqlite_file):
+    db_url = f"sqlite+aiosqlite:///{tmp_sqlite_file}"
+    engine = create_async_engine(db_url, future=True)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield engine
+    await engine.dispose()
+
+
+@pytest.fixture()
+async def test_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
+    SessionLocal = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
+    async with SessionLocal() as session:
+        yield session
+
+
+@pytest.fixture()
+async def client(test_session: AsyncSession):
+    async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
+        yield test_session
+
     app.dependency_overrides[get_db] = override_get_db
-    with TestClient(app) as test_client:
-        yield test_client
+
+    async with httpx.AsyncClient(app=app, base_url="http://test") as c:
+        yield c
 
 
-def test_database_connection(db_session):
-    """Тест подключения к базе данных"""
-    assert db_session is not None
-    # Пример проверки - выполнение простого запроса
-    result = db_session.execute("SELECT 1")
-    assert result.fetchone()[0] == 1
+async def test_database_connection(test_session: AsyncSession):
+    result = await test_session.execute(text("SELECT 1"))
+    assert result.scalar() == 1
+
+
+async def test_health_endpoint(client: httpx.AsyncClient):
+    resp = await client.get("/health")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["status"] == "ok"
+    assert "sqlite" in data

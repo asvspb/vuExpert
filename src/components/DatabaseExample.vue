@@ -31,16 +31,16 @@ with engine.connect() as connection:
 const redis = require('redis');
 
 const client = redis.createClient({
-host: 'localhost',
-port: 6379
+  host: 'localhost',
+  port: 6379
 });
 
 client.on('connect', () => {
-console.log('Подключено к Redis');
+  console.log('Подключено к Redis');
 });
 
 client.on('error', (err) => {
-console.error('Ошибка Redis:', err);
+  console.error('Ошибка Redis:', err);
 });
         </code></pre>
       </div>
@@ -50,15 +50,8 @@ console.error('Ошибка Redis:', err);
   </div>
 </template>
 
-<script>
+<script setup>
 import DatabaseConnectionExample from './DatabaseConnectionExample.vue'
-
-export default {
-  name: 'DatabaseExample',
-  components: {
-    DatabaseConnectionExample
-  }
-}
 </script>
 
 <style lang="scss">

@@ -134,10 +134,8 @@ const closeRedisConnection = async () => {
   </div>
 </template>
 
-<script>
-export default {
-  name: 'DatabaseConnectionExample'
-}
+<script setup>
+// Статический компонент. Логика не требуется — используем `<script setup>` для единообразия.
 </script>
 
 <style lang="scss">
@@ -147,7 +145,7 @@ export default {
 .connection-examples {
   @include container(1000px);
   margin: 20px auto;
- padding: $padding-large;
+  padding: $padding-large;
   
   h2 {
     color: $primary-text-color;
