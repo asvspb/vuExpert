@@ -3,42 +3,45 @@
     <h2>Примеры подключения к базам данных</h2>
     
     <div class="connection-section">
-      <h3>Подключение к MySQL</h3>
-      <p>Для подключения к MySQL из Node.js приложения используется библиотека mysql2:</p>
+      <h3>Подключение к SQLite</h3>
+      <p>Для подключения к SQLite из Python-приложения (на сервере) используется SQLAlchemy:</p>
       
       <div class="code-block">
         <pre><code>
-// Установка зависимости
-npm install mysql2
+# Установка зависимости
+pip install sqlalchemy aiosqlite
 
-// Подключение в приложении
-const mysql = require('mysql2');
+# Подключение в приложении
+from sqlalchemy import create_engine, text
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
 
-// Создание пула подключений (рекомендуемый способ)
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'password',
-  database: 'my_database',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
+# Асинхронное подключение к базе данных SQLite
+DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+engine = create_async_engine(DATABASE_URL)
 
-// Использование пула для выполнения запросов
-const executeQuery = async (query, params) => {
-  const promise = pool.promise();
-  const [rows] = await promise.execute(query, params);
-  return rows;
-};
+# Создание сессии
+AsyncSessionLocal = sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+);
 
-// Пример использования
-try {
-  const users = await executeQuery('SELECT * FROM users WHERE active = ?', [1]);
-  console.log(users);
-} catch (error) {
-  console.error('Ошибка при выполнении запроса:', error);
-}
+# Функция для получения сессии базы данных
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session
+        
+# Пример использования в эндпоинте FastAPI
+from fastapi import Depends, FastAPI
+from sqlalchemy.ext.asyncio import AsyncSession
+
+app = FastAPI()
+
+@app.get("/items/{item_id}")
+async def read_item(item_id: int, db: AsyncSession = Depends(get_db)):
+    # Работа с базой данных
+    pass
         </code></pre>
       </div>
     </div>

@@ -1,5 +1,5 @@
 {
-  "name": "vue-mysql-redis-scss-learning-project",
+  "name": "vue-sqlite-redis-scss-learning-project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,13 +7,13 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
-  },
- "dependencies": {
+ },
+  "dependencies": {
     "vue": "^3.4.21"
   },
   "devDependencies": {
-  "@vitejs/plugin-vue": "^5.0.4",
-  "sass": "^1.93.3",
-  "vite": "^5.1.6"
-}
+    "@vitejs/plugin-vue": "^5.0.4",
+    "sass": "^1.93.3",
+    "vite": "^5.1.6"
+  }
 }

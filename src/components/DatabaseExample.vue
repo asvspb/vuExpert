@@ -3,27 +3,21 @@
     <h2>Примеры работы с базами данных</h2>
     
     <div class="db-section">
-      <h3>MySQL</h3>
-      <p>MySQL - это популярная реляционная система управления базами данных (RDBMS), использующая язык запросов SQL.</p>
+      <h3>SQLite</h3>
+      <p>SQLite - это встраиваемая система управления реляционными базами данных, не требующая отдельного серверного процесса.</p>
       <div class="example-code">
         <pre><code>
-// Пример подключения к MySQL (на стороне сервера)
-const mysql = require('mysql2');
+// Пример подключения к SQLite с использованием SQLAlchemy (на стороне сервера)
+import sqlite3
+from sqlalchemy import create_engine, text
 
-const connection = mysql.createConnection({
- host: 'localhost',
- user: 'your_username',
- password: 'your_password',
- database: 'your_database'
-});
+# Создание подключения к базе данных SQLite
+engine = create_engine("sqlite:///./test.db")
 
-connection.connect((err) => {
- if (err) {
-   console.error('Ошибка подключения: ' + err.stack);
-   return;
- }
-console.log('Успешное подключение к базе данных как id ' + connection.threadId);
-});
+# Пример выполнения SQL-запроса
+with engine.connect() as connection:
+    result = connection.execute(text("SELECT 1"))
+    print(result.fetchone())
         </code></pre>
       </div>
     </div>

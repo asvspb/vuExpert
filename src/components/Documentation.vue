@@ -86,15 +86,15 @@ $font-size: 16px;
     </section>
     
     <section class="doc-section">
-      <h2>MySQL</h2>
-      <p>MySQL - одна из самых популярных реляционных систем управления базами данных (RDBMS), использующих язык SQL. Она широко применяется в веб-разработке для хранения структурированных данных.</p>
+      <h2>SQLite</h2>
+      <p>SQLite - это встраиваемая система управления реляционными базами данных, не требующая отдельного серверного процесса. В отличие от других СУБД, SQLite хранит всю базу данных, включая определения, таблицы, индексы и данные, в одном файле на обычной файловой системе.</p>
       
       <h3>Основные концепции</h3>
       <ul>
-        <li><strong>Таблицы</strong> - структуры для хранения данных в виде строк и столбцов</li>
-        <li><strong>Отношения</strong> - связи между таблицами (один-к-одному, один-ко-многим, многие-ко-многим)</li>
-        <li><strong>Индексы</strong> - структуры, ускоряющие выполнение запросов</li>
-        <li><strong>Транзакции</strong> - группы операций, выполняемые как единое целое</li>
+        <li><strong>Файловая база данных</strong> - вся база данных хранится в одном файле</li>
+        <li><strong>Нет сервера</strong> - не требует отдельного процесса сервера</li>
+        <li><strong>Легковесность</strong> - минимальные системные требования</li>
+        <li><strong>Широкая совместимость</strong> - поддерживается во многих языках программирования</li>
       </ul>
       
       <h3>Примеры SQL-запросов</h3>
@@ -102,17 +102,17 @@ $font-size: 16px;
         <pre><code>
 -- Создание таблицы
 CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(100) UNIQUE NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Вставка данных
 INSERT INTO users (name, email) VALUES ('Иван Иванов', 'ivan@example.com');
 
 -- Выборка данных
-SELECT id, name, email FROM users WHERE created_at > '2023-01';
+SELECT id, name, email FROM users WHERE created_at > '2023-01-01';
 
 -- Обновление данных
 UPDATE users SET name = 'Иван Петров' WHERE id = 1;
