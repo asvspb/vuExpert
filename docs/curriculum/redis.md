@@ -1,5 +1,24 @@
 Вот структура курса по **Redis** для проекта **VueExpert**.
 
+### Async‑пайплайны и транзакции
+```python
+import redis.asyncio as redis
+
+r = redis.from_url("redis://localhost:6379", decode_responses=True)
+
+# Пайплайн (буферизация нескольких команд)
+async with r.pipeline(transaction=False) as pipe:
+    await pipe.incr("counter")
+    await pipe.expire("counter", 60)
+    results = await pipe.execute()
+
+# Транзакция (MULTI/EXEC)
+async with r.pipeline(transaction=True) as pipe:
+    pipe.set("a", 1)
+    pipe.incr("a")
+    await pipe.execute()  # гарантированная атомарность пакета
+```
+
 Наша философия: **«Redis — это не просто кэш. Это швейцарский нож для высокой нагрузки»**.
 Мы учим использовать Redis не только для хранения временных данных, но и как инструмент для очередей, счетчиков, рейтингов и защиты от атак (Rate Limiting). В связке с FastAPI (async) это дает невероятную производительность.
 

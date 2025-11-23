@@ -21,6 +21,25 @@
 - Для E2E укажите `PW_BASE_URL` при необходимости (`http://localhost:4173`).
 
 Healthcheck (как следующий шаг):
+
+Пример docker-compose:
+```yaml
+services:
+  backend:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+```
+
+В Dockerfile:
+```Dockerfile
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
+```
+
 - Для backend можно добавить `HEALTHCHECK` или секцию `healthcheck:` в Compose, проверяя `http://backend:8000/health`.
 
 *Цель: Заменить ручную установку Python/Node.js на `docker-compose up`. Настроить Hot Reload.*
