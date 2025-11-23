@@ -5,5 +5,9 @@ aiosqlite
 sqlalchemy
 sqlalchemy[asyncio]
 python-dotenv
+httpx
+pytest
 pytest-asyncio
+pytest-cov
+ruff
 testcontainers
