@@ -20,8 +20,8 @@ engine = create_async_engine(
     DATABASE_URL,
     echo=True,  # Установите в False в продакшене
     pool_pre_ping=True,
-    connect_args={"check_same_thread": False}  # Необходимо для SQLite
 )
+
 
 AsyncSessionLocal = async_sessionmaker(
     engine,

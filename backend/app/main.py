@@ -14,21 +14,11 @@ from .database import get_db, engine
 from .models import Base
 from . import crud, schemas
 
-# Создаем таблицы в базе данных
-# В реальном приложении лучше использовать миграции (например, Alembic)
-import asyncio
-from sqlalchemy import event
-from sqlalchemy.schema import CreateTable
-
-# Создание таблиц при запуске приложения
-@app.on_event("startup")
-async def startup_event():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
+# Настройки Redis
 REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 
+# Приложение FastAPI должно быть создано ДО регистрации обработчиков событий
 app = FastAPI(title="VueExpert Backend", version="0.1.0")
 
 # Получаем разрешенные источники из переменной окружения
@@ -42,30 +32,36 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Клиент Redis
 redis_client = redis.from_url(
     f"redis://{REDIS_HOST}:{REDIS_PORT}",
     encoding="utf-8",
     decode_responses=True,
 )
 
+# Создание таблиц при запуске приложения
+@app.on_event("startup")
+async def startup_event():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
 
 @app.get("/health")
 async def health() -> dict:
-    """Простая проверка работы backend и подключения к Redis."""
+    """Простая проверка работы backend и подключения к Redis/SQLite."""
     try:
         pong = await redis_client.ping()
         redis_status = "ok" if pong else "unreachable"
     except Exception as exc:  # noqa: BLE001
         redis_status = f"error: {exc}"
-    
-    # Проверим также подключение к SQLite
+
     try:
-        # Простая проверка подключения - получим список таблиц
-        async with engine.begin() as conn:
+        # Проверим возможность подключения к SQLite
+        async with engine.begin():
             sqlite_status = "ok"
     except Exception as exc:  # noqa: BLE001
         sqlite_status = f"error: {exc}"
-    
+
     return {"status": "ok", "redis": redis_status, "sqlite": sqlite_status}
 
 
@@ -105,4 +101,3 @@ async def create_user(user: schemas.UserCreate, db: AsyncSession = Depends(get_d
 async def read_users(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db)):
     users = await crud.get_users(db, skip=skip, limit=limit)
     return users
-

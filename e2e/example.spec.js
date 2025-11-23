@@ -15,5 +15,5 @@ test('has main heading', async ({ page }) => {
   // Check for the presence of the main heading
   const heading = page.locator('h1');
   await expect(heading).toBeVisible();
-  await expect(heading).toContainText('Learning Project');
+  await expect(heading).toContainText('Добро пожаловать');
 });
