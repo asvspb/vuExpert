@@ -1,20 +1,21 @@
+import { fileURLToPath } from 'node:url'
+import { mergeConfig } from 'vite'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+
+import { configDefaults } from 'vitest/config'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src')
-    }
- },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@use "@/styles/variables.scss" as *;`
-      }
+  test: {
+    environment: 'jsdom',
+    exclude: [...configDefaults.exclude, 'e2e/*'],
+    root: fileURLToPath(new URL('./', import.meta.url)),
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: ['node_modules', 'src/main.js', 'src/components/README.md', 'src/styles/*', 'docs/*']
     }
  }
 })

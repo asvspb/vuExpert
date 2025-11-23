@@ -4,4 +4,6 @@ redis
 aiosqlite
 sqlalchemy
 sqlalchemy[asyncio]
-
+pytest
+pytest-asyncio
+testcontainers
