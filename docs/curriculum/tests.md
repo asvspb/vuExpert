@@ -65,11 +65,86 @@
 ### 🔗 Модуль TA2. Интеграционные тесты API
 **Контекст:** Проверяем FastAPI + DB.
 *   **2.1. AsyncClient (`httpx`):**
-    *   Делаем реальные запросы к приложению: `client.post("/items")`.
+    *   Делаем реальные асинхронные запросы к приложению: `await client.post("/items")`.
+    *   Используем `httpx.AsyncClient` + `app.dependency_overrides` для подмены `get_db` на тестовую SQLite (aiosqlite).
 *   **2.2. Тестовая БД:**
     *   Почему нельзя тестировать на рабочей базе.
     *   Стратегия: Создать БД -> Накатить миграции -> Прогнать тест -> Удалить данные (Rollback).
     *   `Override Dependency`: Подмена основной БД на тестовую SQLite (в памяти) или отдельную Postgres.
+
+Пример: полноценный интеграционный тест FastAPI + SQLite (async)
+
+```python
+# tests/test_api_integration.py
+import os
+import tempfile
+import pytest
+from typing import AsyncGenerator
+
+import httpx
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy import text
+
+from app.main import app
+from app.database import Base, get_db
+
+pytestmark = pytest.mark.asyncio
+
+@pytest.fixture(scope="session")
+def tmp_sqlite_file():
+    fd, path = tempfile.mkstemp(prefix="tmp_test_", suffix=".sqlite")
+    os.close(fd)
+    try:
+        yield path
+    finally:
+        try:
+            os.remove(path)
+        except FileNotFoundError:
+            pass
+
+@pytest.fixture(scope="session")
+async def test_engine(tmp_sqlite_file):
+    db_url = f"sqlite+aiosqlite:///{tmp_sqlite_file}"
+    engine = create_async_engine(db_url, future=True)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield engine
+    await engine.dispose()
+
+@pytest.fixture()
+async def test_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
+    SessionLocal = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
+    async with SessionLocal() as session:
+        yield session
+
+@pytest.fixture()
+async def client(test_session: AsyncSession):
+    async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
+        # Возвращаем заранее созданную сессию для каждого запроса
+        yield test_session
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    async with httpx.AsyncClient(app=app, base_url="http://test") as c:
+        yield c
+
+async def test_database_connection(test_session: AsyncSession):
+    result = await test_session.execute(text("SELECT 1"))
+    assert result.scalar() == 1
+
+async def test_health_endpoint(client: httpx.AsyncClient):
+    resp = await client.get("/health")
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["status"] == "ok"
+    assert "sqlite" in data
+```
+
+Пояснения:
+- httpx.AsyncClient позволяет тестировать асинхронное FastAPI-приложение без запуска сервера.
+- SQLite используется во временном файле (aiosqlite), чтобы не трогать рабочую БД.
+- app.dependency_overrides[get_db] подменяет DI на тестовую сессию ORM.
+- Фикстуры разделяют создание движка (session) и клиента; тесты независимы и повторяемы.
 
 ### 🎭 Модуль TA3. Мокирование (Mocking)
 **Контекст:** Как протестировать оплату, не списывая деньги с карты?
@@ -83,6 +158,7 @@
 
 ### 🤖 Модуль TA4. E2E с Playwright
 **Контекст:** Робот гуляет по сайту.
+- Базовый URL для тестов берется из переменной окружения `PW_BASE_URL` (по умолчанию `http://localhost:5173`, для `vite preview` используйте `http://localhost:4173`).
 *   **4.1. Browser Automation:**
     *   Запуск Webkit/Chromium/Firefox. Headless режим.
 *   **4.2. Сценарии:**

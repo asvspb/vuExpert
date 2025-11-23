@@ -126,7 +126,7 @@
 
 3.  **Env Switcher:**
     *   Панель с переключателями `.env` (Dev / Prod).
-    *   Код: `console.log(import.meta.env.VITE_API_URL)`.
+    *   Код: `console.log(import.meta.env.VITE_API_BASE_URL)`.
     *   Студент переключает режим, и значение в консоли меняется на лету.
 
 4.  **HMR vs Reload Race:**
