@@ -6,6 +6,10 @@ from fastapi.middleware.cors import CORSMiddleware
 import redis.asyncio as redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
+# Загружаем переменные окружения из файла .env
+from dotenv import load_dotenv
+load_dotenv()
+
 from .database import get_db, engine
 from .models import Base
 from . import crud, schemas
@@ -27,14 +31,12 @@ REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 
 app = FastAPI(title="VueExpert Backend", version="0.1.0")
 
-# Разрешим запросы с фронта на Vite (по умолчанию localhost:4173)
-origins = [
-    "http://localhost:4173",
-]
+# Получаем разрешенные источники из переменной окружения
+cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:4173").split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

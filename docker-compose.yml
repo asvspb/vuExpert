@@ -6,6 +6,8 @@ services:
     container_name: vueexpert-frontend
     ports:
       - "4173:4173" # localhost:4173 -> контейнер (vite preview)
+    env_file:
+      - .env
     environment:
       # VITE_* переменные можно добавить здесь при необходимости
       VITE_API_BASE_URL: "http://backend:8000"
@@ -17,6 +19,8 @@ services:
     container_name: vueexpert-backend
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
