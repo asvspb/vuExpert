@@ -4,19 +4,27 @@
 В баг‑репортах всплывают XSS и утечки токенов. Нужен минимум обязательных защит: XSS, Secrets, JWT/CSRF и Rate Limiting.
 
 ### 1. Техническое Задание (ТЗ)
+- Basic: CSP, security headers, запрет опасного v-html
+- Advanced: rate limiting (Redis), HSTS, CSRF‑токены, расширенная CSP для внешних ресурсов
 - Файлы: `backend/app/main.py`, `backend/app/security.py`
 - Задача: добавить CSP и Security Headers, внедрить Rate Limiter на Redis, хранить Refresh Token в HttpOnly Cookie, исключить опасный v-html на фронте.
 - Условия: соблюсти CORS для 5173/4173, добавить SameSite для cookie.
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: заголовки CSP/nosniff присутствуют
+- Advanced: 429 при лимите; HSTS включён; CSRF‑поток корректен
 - Заголовки: `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`
 - `/products` кэшируется, лимит >10/мин даёт 429
 
 ### 3. Теория (Just-in-Time)
+- Basic: авто‑эскейпинг Vue, CSP, опасность v‑html
+- Advanced: HSTS, CSRF‑контуры, расширенная CSP, threats model
 - Авто‑эскейпинг Vue и риски v-html
 - JWT в памяти + Refresh в HttpOnly Cookie (и CSRF меры)
 
 ### 4. Практика (Interactive Steps)
+- Basic: добавь middleware CSP/headers, устрани v‑html
+- Advanced: внедри Redis‑лимитер, включи HSTS, настрой CSRF токен‑поток
 Фрагменты к доработке:
 ```py
 # app/main.py (headers)
@@ -35,12 +43,19 @@ async def rate_limiter(request, call_next):
 Фронт: убрать `v-html` для пользовательских данных или санитайзить DOMPurify.
 
 ### 5. Чек-лист Самопроверки (Verification)
+- Basic:
+  - [ ] CSP/nosniff выставляются
+  - [ ] Нет v‑html на пользовательских данных
+- Advanced:
+  - [ ] 429 при лимите; HSTS; CSRF‑поток работает
 - [ ] CSP заголовок задан
 - [ ] HttpOnly + SameSite для Refresh Token
 - [ ] Rate Limiter выдаёт 429 при >10/мин
 - [ ] Нет небезопасного `v-html`
 
 ### 6. Возможные ошибки (Troubleshooting)
+- Basic: CSP ломает ассеты
+- Advanced: некорректные ключи лимитера, забытый HSTS/CSRF
 - CSP ломает ассеты → разреши нужные источники
 - Не задал SameSite → уязвимость к CSRF
 - Лимитер блокирует всех → ключ должен включать IP/путь

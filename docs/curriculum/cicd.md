@@ -6,6 +6,8 @@
 PR‑ы иногда падают из‑за линтинга или нестабильных тестов. Нужен минимальный, но строгий конвейер: линтеры в fail‑mode, покрытие артефактами и e2e на preview.
 
 ### 1. Техническое Задание (ТЗ)
+- Basic: линтеры в fail-mode, unit с coverage артефактами, e2e на preview
+- Advanced: matrix build, кэш зависимостей, артефакты логов при падениях
 - Файл: `.github/workflows/ci.yml`
 - Задача: включить Stylelint в фронтовом job, перевести ESLint/Ruff в fail‑on‑error, сохранять coverage как артефакт.
 - Условия: e2e работают по PW_BASE_URL на 4173.

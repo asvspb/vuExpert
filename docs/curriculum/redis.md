@@ -4,6 +4,8 @@
 Нужно быстро: кэшировать списки товаров, защищать API от перегрузки и считать рейтинги. Redis поможет, но только если использовать его как нужно.
 
 ### 1. Техническое Задание (ТЗ)
+- Basic: cache-aside для /products, rate limiter на IP
+- Advanced: шторм кэша (stampede) и Lua, ключи инвалидации
 - Файлы: `backend/app/main.py`, `backend/app/database.py`
 - Задача: добавить Rate Limiter middleware и кэширование `/products` через Redis.
 - Условия: использовать `redis.asyncio.from_url(..., decode_responses=True)`; TTL для кэша 60с.

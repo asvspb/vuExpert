@@ -4,6 +4,8 @@
 Ты добавляешь карточки товаров на витрину SPA. Нужен переиспользуемый компонент с чистыми пропсами, событиями и вычисляемыми свойствами. Хочется просто: прокинул данные — получил предсказуемую верстку и поведение без «магии» и скрытых сайд-эффектов.
 
 ### 1. Техническое Задание (ТЗ)
+- Basic: реализовать ProductCard с пропсами/событиями/вычисляемыми + стили BEM
+- Advanced: добавить модификаторы/состояния, слоты с fallbacks, оптимизацию re-render
 - Файл: `src/components/ProductCard.vue`
 - Задача: Реализовать компонент карточки товара с API уровня Middle:
   - Пропсы: `title: string`, `price: number`, `image: string`, `featured?: boolean` (по умолчанию false)
@@ -14,6 +16,8 @@
   - Без Options API (только `<script setup>`)
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: базовая карточка с изображением/заголовком/ценой/кнопкой
+- Advanced: модификатор featured, расширенный слот actions
 ```
 +----------------------------------+
 | [img] product-card__image        |
@@ -25,6 +29,8 @@
 ```
 
 ### 3. Теория (Just-in-Time)
+- Basic: <script setup>, computed, emits, именованные слоты
+- Advanced: производительность рендера, мемоизация/кэширование, паттерны композиции
 - `<script setup>` упрощает синтаксис: `defineProps`/`defineEmits`, не нужен `export default`
 - `computed` для производных значений (например, форматирование цены)
 - События через `const emit = defineEmits([...])` и `emit('add-to-cart')`
@@ -32,6 +38,8 @@
 - BEM + scoped: блок `product-card`, элементы `__image/__title/__price`, модификатор `--featured`
 
 ### 4. Практика (Interactive Steps)
+- Basic: собрать компонент по шаблону, починить «сломанный код»
+- Advanced: добавить модификатор/состояние и улучшить API слотов
 Шаги — исправь «сломанный код» и заполни пропуски, не копируя целиком решение.
 
 1) Скелет компонента
@@ -96,6 +104,11 @@ new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFrac
 - Ответ: `product-card product-card--featured ...`
 
 ### 5. Чек-лист Самопроверки (Verification)
+- Basic:
+  - [ ] Пропсы/события/вычисляемые работают
+  - [ ] BEM + scoped проходят линт
+- Advanced:
+  - [ ] Модификаторы/слоты расширены, нет лишних ререндеров
 - [ ] Использован `<script setup>` и Composition API
 - [ ] События `add-to-cart` и `open` работают корректно
 - [ ] Формат цены корректный для `ru-RU`
@@ -103,6 +116,8 @@ new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFrac
 - [ ] Слоты работают (default + actions)
 
 ### 6. Возможные ошибки (Troubleshooting)
+- Basic: забыли .stop на кнопке, ошибка форматирования цены
+- Advanced: избыточные ререндеры, смешение состояний в одном пропе
 - Забытый `.stop` на кнопке → карточка открывается при клике «В корзину»
 - Форматтер цены добавляет копейки → добавь `maximumFractionDigits: 0`
 - Смешение Options API → следуй `<script setup>` и не используй `export default`

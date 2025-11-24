@@ -4,6 +4,8 @@
 У тебя фронт на 5173 и бэкенд на 8000. Браузер режет запросы CORS-ом в деве, а прод сборка тяжелеет и грузится медленно. Нужно: прокинуть proxy и оптимизировать бандл.
 
 ### 1. Техническое Задание (ТЗ)
+- Basic: dev proxy /api и /ws, preview на 4173
+- Advanced: manualChunks для вендоров/маршрутов, env-разделение
 - Файл: `vite.config.js`
 - Задача: Настроить dev proxy `/api` → `http://localhost:8000` с поддержкой WebSocket на `/ws`; включить разбивку чанков для вендоров.
 - Условия: сохранить текущие плагины; не ломать Playwright Preview; учесть env.
@@ -43,6 +45,12 @@ export default defineConfig({
 Подсказка: для `/api` включи `rewrite: (p) => p.replace(/^\/api/, '/api')` при необходимости; для WS — `ws: true`.
 
 ### 5. Чек-лист Самопроверки (Verification)
+- Basic:
+  - [ ] CORS исчез в Dev
+  - [ ] WS работает
+- Advanced:
+  - [ ] vendor.js отделён
+  - [ ] Preview/E2E стабильны
 - [ ] CORS исчез в Dev, фронт ходит на `/api`
 - [ ] WS работает через `/ws`
 - [ ] В проде появился `vendor.js`

@@ -4,6 +4,8 @@
 Тебе нужно перевести проект на async ORM: безопасные транзакции, DI сессии и подготовка к Postgres.
 
 ### 1. Техническое Задание (ТЗ)
+- Basic: engine+session, DI get_db, init схемы
+- Advanced: шаблоны транзакций, прод-настройки соединений
 - Файлы: `backend/app/database.py`, `backend/app/models.py`
 - Задача: настроить `create_async_engine`, `async_sessionmaker`, DI `get_db` и инициализацию схемы.
 - Условия: один Session на запрос; явные транзакции при изменениях.

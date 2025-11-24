@@ -4,6 +4,8 @@
 SQLite упирается в ограничения. Бизнес ждёт JSON‑фильтры и конкурентные покупки. Пора мигрировать на Postgres.
 
 ### 1. Техническое Задание (ТЗ)
+- Basic: перейти на DATABASE_URL=postgresql+asyncpg, запустить контейнер, alembic upgrade
+- Advanced: JSONB+GIN индексы, строгие типы (DECIMAL/UUID), конфигурация пулов
 - Файлы: `.env`, `backend/app/database.py`, Alembic migration
 - Задача: переключиться на `DATABASE_URL=postgresql+asyncpg://...`, поднять контейнер `postgres:16-alpine`, выполнить `alembic upgrade head`.
 - Условия: строгие типы (`DECIMAL`, `UUID`), JSONB для атрибутов.

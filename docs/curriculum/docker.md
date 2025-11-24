@@ -4,6 +4,8 @@
 У команды «работает у меня» и разные версии инструментов. Нужна единая dev/preview среда в Docker без боли с портами и HMR.
 
 ### 1. Техническое Задание (ТЗ)
+- Basic: frontend+backend в compose, HMR и preview, healthchecks
+- Advanced: зависимости service_healthy, кэш npm/pip, slim-образы
 - Файлы: `Dockerfile` (frontend), `docker-compose.yml`
 - Задача: настроить сервисы `frontend` и `backend`, пробросить порты 5173 (dev) и 4173 (preview), корретно смонтировать volume для HMR, добавить healthchecks.
 - Условия: frontend использует Vite; preview проверяется Playwright в CI.

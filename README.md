@@ -46,6 +46,10 @@
 - Unit-тесты: `npm run test` / покрытие: `npm run test:coverage`
 - E2E: `npm run e2e` (PW_BASE_URL берётся из окружения)
 
+## Стек, линтеры и учебные материалы
+
+Учебные материалы построены в формате уроков с двумя уровнями: Basic (минимум для MVP) и Advanced (архитектура/безопасность/производительность). См. раздел docs/curriculum.
+
 ## Стек и линтеры
 - Frontend: Vue 3 (Composition API + `<script setup>`), Vite, SCSS
 - Backend: FastAPI, SQLAlchemy Async, SQLite/Redis (старт), PostgreSQL (прод)

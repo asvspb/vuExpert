@@ -4,6 +4,8 @@
 Нужно стабильно бить внешний API: таймауты, ретраи и быстрые in‑process тесты без сети.
 
 ### 1. Техническое Задание (ТЗ)
+- Basic: AsyncClient helper с таймаутами, in-process тесты
+- Advanced: ретраи/бэкофф на временные ошибки, negative-тесты на исключения
 - Файлы: `backend/app/clients/http.py`, `backend/tests/test_http.py`
 - Задача: сделать AsyncClient helper с таймаутами и ретраями; написать тесты с in‑process клиентом (`app=app, base_url="http://test"`).
 - Условия: явный Timeout, 3 ретрая на временные ошибки.
