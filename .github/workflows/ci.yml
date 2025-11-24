@@ -44,7 +44,7 @@ jobs:
         run: npm ci
       - name: Lint (eslint + stylelint)
         run: |
-          npx eslint --version || npm i -D eslint
+          npx eslint --version || npm i -D eslint @eslint/js eslint-plugin-vue eslint-plugin-vuejs-accessibility vue-eslint-parser
           npx stylelint --version || npm i -D stylelint stylelint-config-standard-scss stylelint-config-recommended-vue stylelint-order postcss-html
           npx eslint . || true
           npx stylelint "**/*.{vue,scss,css}" || true

@@ -1,5 +1,4 @@
 import { fileURLToPath } from 'node:url'
-import { mergeConfig } from 'vite'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 

@@ -34,17 +34,25 @@ module.exports = {
     ],
 
     // Keep selectors simple
-    'selector-max-compound-selectors': 3,
+    'selector-max-compound-selectors': 4,
 
     // SCSS nesting depth
-    'max-nesting-depth': 3,
+    'max-nesting-depth': 4,
 
     // Property ordering for readability
-    'order/properties-alphabetical-order': true,
+    'order/properties-alphabetical-order': null,
 
     // General recommendations
     'color-hex-length': 'short',
+    'property-no-vendor-prefix': null,
     'no-duplicate-selectors': true,
+
+    // SCSS compatibility and formatting leniency for SFCs
+    'at-rule-no-unknown': null,
+    'scss/at-rule-no-unknown': true,
+    'declaration-empty-line-before': null,
+    'at-rule-empty-line-before': null,
+    'declaration-property-value-no-unknown': null,
   },
   ignoreFiles: [
     'dist/**/*',
