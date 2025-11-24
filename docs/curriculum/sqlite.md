@@ -1,3 +1,83 @@
+# 🗄️ SQLite во VueExpert: SQL и интеграция с FastAPI (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+Ты добавляешь раздел заказов. Нужна таблица и CRUD: без дыр в безопасности и с нормальной схемой. Начнём на SQLite как на безопасном полигоне.
+
+### 1. Техническое Задание (ТЗ)
+- Файлы: `backend/app/database.py`, `backend/app/models.py`
+- Задача: Создать таблицу `orders` и обеспечить базовый CRUD через ORM/SQL с безопасными запросами.
+- Условия:
+  - SQL: параметризованные запросы; ORM: SQLAlchemy 2.0 Async
+  - Тест: добавить запись и прочитать её обратно
+
+### 2. Референс (Visual/Logic Target)
+```
+orders(id PK, user_id, total_amount, created_at)
+```
+
+### 3. Теория (Just-in-Time)
+- Manifest typing SQLite, PK/FK, почему нельзя собирать SQL-строки плюсами
+- Async ORM vs sqlite3, когда переключаться на PostgreSQL
+
+### 4. Практика (Interactive Steps)
+1) DDL (SQL)
+```sql
+CREATE TABLE IF NOT EXISTS orders (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  total_amount REAL NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+2) DML (Python, aiosqlite/ORM)
+```py
+# ___FILL_ORM_OR_SQL___: вставь запись безопасно (param/ORM)
+```
+3) Тест
+- Напиши проверку с httpx.AsyncClient или юнит-тестом модели
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] Нет конкатенации SQL-строк
+- [ ] PK, NOT NULL, DEFAULT верно заданы
+- [ ] Тесты проходят
+
+### 6. Возможные ошибки (Troubleshooting)
+- Database locked → используй WAL и корректные транзакции
+- Типы/nullable → проверь схемы и валидацию
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```py
+# models.py (фрагмент)
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+class Base(DeclarativeBase):
+    pass
+class Order(Base):
+    __tablename__ = 'orders'
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[int]
+    total_amount: Mapped[float]
+    created_at: Mapped[str] = mapped_column(server_default=text('CURRENT_TIMESTAMP'))
+
+# database.py (DDL init)
+async with engine.begin() as conn:
+    await conn.run_sync(Base.metadata.create_all)
+
+# создание записи
+async with async_session() as s:
+    async with s.begin():
+        s.add(Order(user_id=1, total_amount=1299.0))
+
+# чтение
+async with async_session() as s:
+    row = await s.scalar(select(Order).order_by(Order.id.desc()))
+```
+</details>
+
+---
+
 Вот структура курса по **SQLite** для проекта **VueExpert**.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

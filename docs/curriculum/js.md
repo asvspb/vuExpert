@@ -1,3 +1,82 @@
+# 📘 JavaScript во VueExpert: От данных к интерфейсу (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+Ты получаешь JSON с сервера и должен отрисовать список товаров. Без ошибок, без «магии», с чистыми функциями и понятной логикой.
+
+### 1. Техническое Задание (ТЗ)
+- Файл: `src/components/ProductList.vue`
+- Задача: Преобразовать массив объектов `products` в список карточек. Реализовать фильтрацию и подсчет суммы.
+- Условия:
+  - Использовать функции `.map/.filter/.reduce`
+  - Никаких мутаций исходного массива
+  - Вывести итоговую сумму внизу списка
+
+### 2. Референс (Visual/Logic Target)
+```
+<ul>
+  <li>Название — Цена</li>
+  <li>...</li>
+</ul>
+<div>Итого: 12 990 ₽</div>
+```
+
+### 3. Теория (Just-in-Time)
+- Колбэки, стрелочные функции, деструктуризация
+- Иммутабельность: не трогаем исходные данные
+- Intl.NumberFormat для цены
+
+### 4. Практика (Interactive Steps)
+Добавь в компонент заготовку и дополни пропуски:
+```vue
+<script setup>
+import { computed } from 'vue'
+const props = defineProps({ products: { type: Array, required: true } })
+const items = computed(() => props.products.___FILL___.___FILL___)
+const total = computed(() => props.products.___FILL___)
+</script>
+<template>
+  <ul>
+    <li v-for="p in items" :key="p.id">{{ p.title }} — {{ p.priceLabel }}</li>
+  </ul>
+  <div>Итого: {{ new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(total) }}</div>
+</template>
+```
+Подсказка: `map` для форматирования, `filter` по условию (например, `inStock`), `reduce` для суммы.
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] Использованы map/filter/reduce
+- [ ] Исходные данные не мутируются
+- [ ] Сумма считается верно
+
+### 6. Возможные ошибки (Troubleshooting)
+- Забыл `return` в стрелочной функции → undefined
+- Мутация массива в `map` → сломает реактивность
+- Ошибка форматирования валюты → проверь параметры Intl.NumberFormat
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```vue
+<script setup>
+import { computed } from 'vue'
+const props = defineProps({ products: { type: Array, required: true } })
+const items = computed(() => props.products
+  .filter(p => p.inStock)
+  .map(p => ({ ...p, priceLabel: new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(p.price) })))
+const total = computed(() => items.value.reduce((sum, p) => sum + p.price, 0))
+</script>
+<template>
+  <ul>
+    <li v-for="p in items" :key="p.id">{{ p.title }} — {{ p.priceLabel }}</li>
+  </ul>
+  <div>Итого: {{ new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(total) }}</div>
+</template>
+```
+</details>
+
+---
+
 Вот полная структура курса JavaScript для проекта **VueExpert**, разделенная на два этапа.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

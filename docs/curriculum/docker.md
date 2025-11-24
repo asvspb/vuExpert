@@ -1,3 +1,80 @@
+# 🐳 Docker во VueExpert: Dev/Preview окружения (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+У команды «работает у меня» и разные версии инструментов. Нужна единая dev/preview среда в Docker без боли с портами и HMR.
+
+### 1. Техническое Задание (ТЗ)
+- Файлы: `Dockerfile` (frontend), `docker-compose.yml`
+- Задача: настроить сервисы `frontend` и `backend`, пробросить порты 5173 (dev) и 4173 (preview), корретно смонтировать volume для HMR, добавить healthchecks.
+- Условия: frontend использует Vite; preview проверяется Playwright в CI.
+
+### 2. Референс (Visual/Logic Target)
+- `docker compose up` поднимает фронт (5173) и бэк (8000)
+- `npm run build && npm run preview` внутри контейнера слушает 4173
+
+### 3. Теория (Just-in-Time)
+- Разница dev (HMR) vs preview (статическая сборка)
+- Почему нужен `CHOKIDAR_USEPOLLING=1` в Docker для HMR на Windows/Mac
+
+### 4. Практика (Interactive Steps)
+1) docker-compose.yml (фрагмент)
+```yaml
+services:
+  frontend:
+    build: .
+    command: npm run dev -- --host 0.0.0.0
+    ports: ["5173:5173"]
+    environment:
+      - CHOKIDAR_USEPOLLING=1
+    volumes:
+      - ./:/app
+      - /app/node_modules
+  backend:
+    build: ./backend
+    ports: ["8000:8000"]
+```
+2) Preview: изменить команду на `npm run preview -- --host 0.0.0.0 --port 4173`, порт 4173
+3) Healthcheck: добавить curl‑пинги `/` и `/docs` (бэк)
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] HMR работает (правки .vue видны сразу)
+- [ ] Preview доступен на 4173
+- [ ] Healthchecks зелёные
+
+### 6. Возможные ошибки (Troubleshooting)
+- HMR не ловит изменения → добавь polling
+- Порт занят → поменяй маппинг или останови локальные процессы
+- Volume перетирает node_modules → используй анонимный том для node_modules
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```yaml
+services:
+  frontend:
+    build: .
+    working_dir: /app
+    command: npm run dev -- --host 0.0.0.0
+    ports: ["5173:5173"]
+    environment:
+      - CHOKIDAR_USEPOLLING=1
+    volumes:
+      - ./:/app
+      - /app/node_modules
+  backend:
+    build: ./backend
+    ports: ["8000:8000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+```
+</details>
+
+---
+
 Вот структура курса по **Docker** для проекта **VueExpert**.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

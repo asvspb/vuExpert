@@ -1,3 +1,89 @@
+# 🧪 Тесты во VueExpert: от RED к GREEN (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+Бизнес жалуется: после правок что‑то ломается в другом месте. Нужен минимальный, но надежный набор тестов и TDD‑подход для критичных функций.
+
+### 1. Техническое Задание (ТЗ)
+- Файлы: `backend/app/` (любая чистая функция, например, подсчет корзины), `backend/tests/` (pytest)
+- Задача: реализовать функцию `calculate_total(items)` по TDD и написать интеграционный тест FastAPI с httpx.AsyncClient для `POST /orders`.
+- Условия: покрытие backend ≥ 60% (или выше в CI), асинхронные тесты через `pytest.mark.anyio`.
+
+### 2. Референс (Visual/Logic Target)
+- RED → GREEN → REFACTOR цикл
+- Тест `POST /orders` возвращает 201 и JSON с суммой.
+
+### 3. Теория (Just-in-Time)
+- Почему TDD ускоряет разработку: спецификация через тесты, меньше регрессий
+- AsyncClient vs TestClient: нужен для async‑приложений
+
+### 4. Практика (Interactive Steps)
+1) RED: добавь падающий тест
+```py
+# backend/tests/test_cart.py
+import pytest
+from app.crud import calculate_total  # или ваш модуль
+
+def test_calculate_total_basic():
+    items = [{"price": 1000, "qty": 2}, {"price": 2990, "qty": 1}]
+    assert calculate_total(items) == 4990  # ожидаемая сумма
+```
+2) GREEN: имплементация минимально проходящая тест
+```py
+# app/crud.py
+def calculate_total(items):
+    return sum(i["price"] * i.get("qty", 1) for i in items)
+```
+3) REFACTOR: добавь валидацию/скидки/НДС по требованиям 
+4) Интеграционный тест FastAPI
+```py
+import pytest
+from httpx import AsyncClient
+from app.main import app
+
+@pytest.mark.anyio
+async def test_create_order_returns_201():
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        res = await ac.post("/orders", json={"items": [{"price": 1000, "qty": 2}]})
+    assert res.status_code in (201, 200)
+    payload = res.json()
+    assert "total" in payload and payload["total"] >= 2000
+```
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] Есть RED→GREEN→REFACTOR цикл
+- [ ] Интеграционный тест AsyncClient проходит
+- [ ] Покрытие backend ≥ целевого порога
+
+### 6. Возможные ошибки (Troubleshooting)
+- Забыли `@pytest.mark.anyio` → RuntimeWarning/ошибки цикла
+- Не закрыли клиент → утечки соединений
+- Жесткие зависимости от реальной БД → используйте SQLite in‑memory и `dependency_overrides`
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```py
+def calculate_total(items):
+    return sum(i["price"] * i.get("qty", 1) for i in items)
+```
+
+```py
+import pytest
+from httpx import AsyncClient
+from app.main import app
+
+@pytest.mark.anyio
+async def test_create_order_returns_201():
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        res = await ac.post("/orders", json={"items": [{"price": 1299, "qty": 2}]})
+    assert res.status_code in (201, 200)
+    assert res.json()["total"] >= 2598
+```
+</details>
+
+---
+
 Вот структура курса по **Тестированию (QA Automation)** для проекта **VueExpert**.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

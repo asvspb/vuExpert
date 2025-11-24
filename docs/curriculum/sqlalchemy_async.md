@@ -1,3 +1,71 @@
+# ⚙️ SQLAlchemy 2.0 Async: Engine/Session/Transactions (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+Тебе нужно перевести проект на async ORM: безопасные транзакции, DI сессии и подготовка к Postgres.
+
+### 1. Техническое Задание (ТЗ)
+- Файлы: `backend/app/database.py`, `backend/app/models.py`
+- Задача: настроить `create_async_engine`, `async_sessionmaker`, DI `get_db` и инициализацию схемы.
+- Условия: один Session на запрос; явные транзакции при изменениях.
+
+### 2. Референс (Visual/Logic Target)
+- Подключение к `sqlite+aiosqlite:///...`
+- DI: `Depends(get_db)` в роутере
+- Логика транзакции с `async with session.begin()`
+
+### 3. Теория (Just-in-Time)
+- Разница sync/async в SQLAlchemy 2.0; зачем `expire_on_commit=False`
+- Почему `engine.begin()` безопаснее для DDL
+
+### 4. Практика (Interactive Steps)
+Вставь заготовку и дополни пропуски:
+```py
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+engine = create_async_engine('sqlite+aiosqlite:///./app.db', echo=True)
+SessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+async def get_db():
+    async with SessionLocal() as session:
+        yield session
+# ___FILL_DDL_CREATE___: Base.metadata.create_all via engine.begin()
+```
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] async engine + async_sessionmaker
+- [ ] DI: один Session на запрос
+- [ ] Явные транзакции при изменениях
+
+### 6. Возможные ошибки (Troubleshooting)
+- Смешал sync/async API — упадёшь на RuntimeError
+- Забыл `await` — ничего не выполнится
+- Закрывай соединения через контекстные менеджеры
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```py
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import text
+
+class Base(DeclarativeBase):
+    pass
+
+engine = create_async_engine('sqlite+aiosqlite:///./app.db', echo=False)
+SessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+async def get_db():
+    async with SessionLocal() as session:
+        yield session
+```
+</details>
+
+---
+
 # ⚙️ SQLAlchemy 2.0 Async: двигатель и топливо
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

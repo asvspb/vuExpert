@@ -1,3 +1,139 @@
+# ⚡️ FastAPI во VueExpert: Скорость и Типизация (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+Ты подключаешь фронт на Vue к бэкенду на FastAPI. Продакшн-готовность требует видимого health-check: фронт и мониторинг должны понимать, живы ли Redis и база. Без этого DevOps и QA мучаются, а пользователи получают пустые страницы без объяснений.
+
+### 1. Техническое Задание (ТЗ)
+- Файлы: `backend/app/main.py`, при необходимости `backend/app/database.py`
+- Задача: Реализовать эндпоинт `GET /health`, который:
+  - Пингует Redis (PING)
+  - Проверяет подключение к БД (SQLite сейчас; далее — PostgreSQL) через `engine.begin()` и простой `SELECT 1`
+  - Возвращает JSON `{ redis: 'ok'|'fail', db: 'ok'|'fail' }` и `200 OK`, если обе проверки ok; иначе `503 Service Unavailable`
+- Условия: Асинхронная реализация, без блокирующих вызовов. Использовать имеющийся DI-подход к сессии.
+
+### 2. Референс (Visual/Logic Target)
+- Пример успешного ответа:
+```
+HTTP/1.1 200 OK
+{
+  "redis": "ok",
+  "db": "ok"
+}
+```
+- Пример при падении Redis:
+```
+HTTP/1.1 503 Service Unavailable
+{
+  "redis": "fail",
+  "db": "ok"
+}
+```
+
+### 3. Теория (Just-in-Time)
+- FastAPI = ASGI, значит вызовы должны быть async, чтобы не блокировать event loop
+- Плохая практика: держать глобальные коннекты без graceful-handling — на падение Redis надо отвечать 503, а не 500
+- DI (Depends) позволяет инжектить сессию БД и мокать её в тестах
+
+### 4. Практика (Interactive Steps)
+Шаги — исправь «сломанный код» и заполни пропуски, не копируя целиком решение.
+1) Эндпоинт
+- В `backend/app/main.py` добавь обработчик:
+```py
+@router.get("/health")
+async def health():
+    redis_ok = False
+    db_ok = False
+    # TODO: выполнить async ping Redis -> redis_ok = True/False
+    # TODO: выполнить SELECT 1 через async engine -> db_ok = True/False
+    status_code = 200 if (redis_ok and db_ok) else 503
+    return JSONResponse({"redis": "ok" if redis_ok else "fail", "db": "ok" if db_ok else "fail"}, status_code=status_code)
+```
+- Подключи router в приложение, если ещё не подключен.
+
+2) Redis ping
+- Используй подключение/клиент Redis из проекта (асинхронный). Примерно:
+```py
+try:
+    # ___FILL_ASYNC_REDIS_PING___
+    redis_ok = True
+except Exception:
+    redis_ok = False
+```
+
+3) DB check
+- Выполни простой запрос:
+```py
+try:
+    async with engine.begin() as conn:
+        await conn.execute(text("SELECT 1"))  # импортируй text из SQLAlchemy
+    db_ok = True
+except Exception:
+    db_ok = False
+```
+
+4) Тест (AsyncClient)
+- В `backend/tests/test_health.py` создай тест с httpx.AsyncClient:
+```py
+async def test_health_ok(async_client):
+    res = await async_client.get("/health")
+    assert res.status_code in (200, 503)
+    payload = res.json()
+    assert set(payload.keys()) == {"redis", "db"}
+```
+- Дополнительно: замокай Redis/DB, чтобы проверить обе ветки (ok/fail).
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] `/health` отдаёт JSON с полями `redis`, `db`
+- [ ] При ошибке Redis/DB код ответа = 503
+- [ ] Нет блокирующих вызовов (async everywhere)
+- [ ] Тесты httpx.AsyncClient зелёные
+
+### 6. Возможные ошибки (Troubleshooting)
+- Синхронный клиент Redis → блокировка event loop. Используй async-клиент
+- Ошибка импорта `text` из SQLAlchemy → импортируй `from sqlalchemy import text`
+- Забыли `await` → корутины не выполняются, статус всегда 503
+- Утечки соединений → используй `async with engine.begin()`
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```py
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
+from sqlalchemy import text
+from .database import engine, get_redis  # зависит от структуры проекта
+
+router = APIRouter()
+
+@router.get("/health")
+async def health():
+    redis_ok = False
+    db_ok = False
+    # Redis
+    try:
+        r = await get_redis()
+        pong = await r.ping()
+        redis_ok = bool(pong)
+    except Exception:
+        redis_ok = False
+    # DB
+    try:
+        async with engine.begin() as conn:
+            await conn.execute(text("SELECT 1"))
+        db_ok = True
+    except Exception:
+        db_ok = False
+    status_code = 200 if (redis_ok and db_ok) else 503
+    return JSONResponse({
+        "redis": "ok" if redis_ok else "fail",
+        "db": "ok" if db_ok else "fail"
+    }, status_code=status_code)
+```
+</details>
+
+---
+
 Вот структура курса по **FastAPI** для проекта **VueExpert**.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

@@ -1,4 +1,62 @@
-# 🌐 httpx essentials: быстрые и безопасные HTTP
+# 🌐 httpx essentials: быстрые и безопасные HTTP (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+Нужно стабильно бить внешний API: таймауты, ретраи и быстрые in‑process тесты без сети.
+
+### 1. Техническое Задание (ТЗ)
+- Файлы: `backend/app/clients/http.py`, `backend/tests/test_http.py`
+- Задача: сделать AsyncClient helper с таймаутами и ретраями; написать тесты с in‑process клиентом (`app=app, base_url="http://test"`).
+- Условия: явный Timeout, 3 ретрая на временные ошибки.
+
+### 2. Референс (Visual/Logic Target)
+- Helper бросает при исчерпании ретраев
+- In‑process тесты быстрые
+
+### 3. Теория (Just-in-Time)
+- Timeout/Retry/Backoff
+- In‑process vs реальная сеть
+
+### 4. Практика (Interactive Steps)
+Фрагменты к доработке:
+```python
+async with httpx.AsyncClient(base_url=BASE, timeout=httpx.Timeout(5.0)) as client:
+    # ___FILL___: ретраи на 5xx и timeouts
+```
+```python
+async with httpx.AsyncClient(app=app, base_url="http://test") as client:
+    r = await client.get("/items")
+```
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] Явные таймауты
+- [ ] Ретраи только на временные ошибки
+- [ ] In‑process тесты без сети
+
+### 6. Возможные ошибки (Troubleshooting)
+- Бесконечные ретраи → добавь лимит/бэкофф
+- Проглатываешь исключения → покрывай тестом негативные кейсы
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```python
+import asyncio, httpx
+
+async def get_with_retry(client, url, retries=3):
+    for attempt in range(retries):
+        try:
+            r = await client.get(url)
+            r.raise_for_status()
+            return r
+        except (httpx.ConnectError, httpx.ReadTimeout, httpx.HTTPStatusError) as e:
+            if attempt == retries - 1:
+                raise
+            await asyncio.sleep(0.2 * (attempt + 1))
+```
+</details>
+
+---
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 
 

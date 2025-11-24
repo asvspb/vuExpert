@@ -1,4 +1,4 @@
-# 🧱 BEM во VueExpert: Чистый нейминг и масштабируемые стили
+# 🧱 BEM во VueExpert: Чистый нейминг и масштабируемые стили (Урок в формате MASTER_PROMPT)
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 
 
@@ -6,10 +6,149 @@ BEM (Block–Element–Modifier) — проверенная временем м�
 
 ---
 
-## 🎯 Цели урока
-- Научиться проектировать классы в стиле BEM для Vue-компонентов
-- Понять, как сочетать BEM с `<style scoped>`, SCSS и динамическими классами (`:class`)
-- Уметь использовать модификаторы и «состояния» (is-*) без хаоса
+### Контекст (Сюжет)
+Ты делаешь витрину интернет-магазина: карточки товара, кнопки, бейджи. Через неделю к вам приходит новый дизайнер, и все цвета/отступы меняются. Старые классы `.title {}`, `.red {}` превращают поддержку в ад — непредсказуемые стили, дублирование и конфликты. Задача — навести порядок с помощью BEM, чтобы код стал читаемым, предсказуемым и легко менялся.
+
+### 1. Техническое Задание (ТЗ)
+- Файл: `src/components/Badge.vue`
+- Задача: Создать компонент `badge` с элементами и модификаторами по BEM.
+- Условия:
+  - Vue 3 + `<script setup>` + SCSS + `<style scoped>`
+  - Нейминг только по BEM: `badge`, `badge__icon`, `badge__label`, модификаторы `badge--{variant}` и `badge--{size}`
+  - Допускаются утилиты `is-*` и `u-*` (например, `is-rounded`)
+
+### 2. Референс (Visual/Logic Target)
+- Варианты: `success | warning | danger`
+- Размеры: `s | m | l`
+- ASCII-схема:
+```
+[ (icon)  Label Text ]
+ ^badge__icon  ^badge__label
+ block: badge; modifiers: badge--success|warning|danger, badge--s|m|l
+```
+
+### 3. Теория (Just-in-Time)
+- BEM = Block–Element–Modifier. Помогает строить семантичные и предсказуемые стили
+- Запись: `block`, `block__element`, `block--modifier`
+- Почему в Vue со `scoped` BEM всё равно нужен: `scoped` изолирует селекторы, но не даёт смысла именам
+- Модификаторы — вариации; состояния — через `is-*`; утилиты на проектном уровне — `u-*`
+
+### 4. Практика (Interactive Steps)
+Шаги — не готовое решение, исправляй «сломанный код» и заполняй пропуски.
+1) Скелет компонента
+- Создай `src/components/Badge.vue`
+- Вставь шаблон и исправь классы по BEM
+```vue
+<template>
+  <span class="___FILL_BLOCK___" :class="[sizeClass, variantClass, { 'is-rounded': rounded }]">
+    <slot name="icon" />
+    <span class="___FILL_ELEMENT_LABEL___"><slot /></span>
+  </span>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+const props = defineProps({
+  size: { type: String, default: 'm', validator: v => ['s','m','l'].includes(v) },
+  variant: { type: String, default: 'success', validator: v => ['success','warning','danger'].includes(v) },
+  rounded: { type: Boolean, default: false }
+})
+const sizeClass = computed(() => `___FILL_BLOCK___--${props.size}`)
+const variantClass = computed(() => `___FILL_BLOCK___--${props.variant}`)
+</script>
+
+<style scoped lang="scss">
+.___FILL_BLOCK___ {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  &.___FILL_BLOCK___--s { font-size: 12px; }
+  &.___FILL_BLOCK___--m { font-size: 14px; }
+  &.___FILL_BLOCK___--l { font-size: 16px; }
+  &.___FILL_BLOCK___--success { background: #e8f7ee; color: #137333; }
+  &.___FILL_BLOCK___--warning { background: #fff7e6; color: #8a6d3b; }
+  &.___FILL_BLOCK___--danger { background: #fdecea; color: #a61b1b; }
+  & .___FILL_BLOCK_____icon { width: 14px; height: 14px; }
+  & .___FILL_BLOCK_____label { font-weight: 600; }
+}
+.is-rounded { border-radius: 9999px; }
+</style>
+```
+- Замени маркеры `___FILL_BLOCK___` на имя блока и `___FILL_ELEMENT_LABEL___` на имя элемента
+
+2) Динамические модификаторы и элементы
+- Добавь слот `name="icon"` как элемент `badge__icon`
+- Проверь вычисляемые классы `sizeClass`/`variantClass`
+
+3) Проверь линтер стилей
+- Запусти: `npm run lint:css` — убедись, что `selector-class-pattern` проходит
+
+4) Интерактивный чек — предсказание
+- Как изменится DOM-класс при `size = 'l'` и `variant = 'danger'`?
+- Ответ: ожидаем `class="badge badge--l badge--danger ..."`
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] Корневой класс = `badge`
+- [ ] Элементы: `badge__icon`, `badge__label`
+- [ ] Модификаторы: `badge--{size}`, `badge--{variant}`
+- [ ] Утилита `is-rounded` добавляется условно
+- [ ] Стили `scoped`, без глубоких селекторов
+
+### 6. Возможные ошибки (Troubleshooting)
+- Классы вида `.label` или `.icon` без префикса блока → Линт-ошибка
+- Смешивание BEM и позиционных селекторов (`.container > :first-child`) → Сделай явный элемент
+- Использование хардкода цветов → Вынеси в токены (`src/styles/variables.scss`)
+- Конфликт модификаторов (одновременно `badge--success` и `badge--danger`) → Разреши через проп `variant`
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```vue
+<template>
+  <span class="badge" :class="[sizeClass, variantClass, { 'is-rounded': rounded }]">
+    <span class="badge__icon"><slot name="icon" /></span>
+    <span class="badge__label"><slot /></span>
+  </span>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+const props = defineProps({
+  size: { type: String, default: 'm', validator: v => ['s','m','l'].includes(v) },
+  variant: { type: String, default: 'success', validator: v => ['success','warning','danger'].includes(v) },
+  rounded: { type: Boolean, default: false }
+})
+const sizeClass = computed(() => `badge--${props.size}`)
+const variantClass = computed(() => `badge--${props.variant}`)
+</script>
+
+<style scoped lang="scss">
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+
+  &--s { font-size: 12px; }
+  &--m { font-size: 14px; }
+  &--l { font-size: 16px; }
+
+  &--success { background: #e8f7ee; color: #137333; }
+  &--warning { background: #fff7e6; color: #8a6d3b; }
+  &--danger { background: #fdecea; color: #a61b1b; }
+
+  &__icon { width: 14px; height: 14px; display: inline-flex; }
+  &__label { font-weight: 600; }
+}
+
+.is-rounded { border-radius: 9999px; }
+</style>
+```
+</details>
 
 ---
 

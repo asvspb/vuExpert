@@ -1,3 +1,160 @@
+# 🌿 Vue 3 во VueExpert: Script Setup и Composition API (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+Ты добавляешь карточки товаров на витрину SPA. Нужен переиспользуемый компонент с чистыми пропсами, событиями и вычисляемыми свойствами. Хочется просто: прокинул данные — получил предсказуемую верстку и поведение без «магии» и скрытых сайд-эффектов.
+
+### 1. Техническое Задание (ТЗ)
+- Файл: `src/components/ProductCard.vue`
+- Задача: Реализовать компонент карточки товара с API уровня Middle:
+  - Пропсы: `title: string`, `price: number`, `image: string`, `featured?: boolean` (по умолчанию false)
+  - События: `add-to-cart` (без payload) и `open` (payload: id: string | number)
+  - Вычисляемые: формат цены `priceLabel` (например, `1 299 ₽`)
+  - Слоты: по умолчанию (доп. контент), `actions` (кнопки)
+  - Стили: SCSS + BEM + `<style scoped>`
+  - Без Options API (только `<script setup>`)
+
+### 2. Референс (Visual/Logic Target)
+```
++----------------------------------+
+| [img] product-card__image        |
+|  product-card__title             |
+|  product-card__price (1 299 ₽)   |
+|  [slot actions] [default slot]   |
+|  (modifier: product-card--featured)
++----------------------------------+
+```
+
+### 3. Теория (Just-in-Time)
+- `<script setup>` упрощает синтаксис: `defineProps`/`defineEmits`, не нужен `export default`
+- `computed` для производных значений (например, форматирование цены)
+- События через `const emit = defineEmits([...])` и `emit('add-to-cart')`
+- Слоты: именованный `slot name="actions"`
+- BEM + scoped: блок `product-card`, элементы `__image/__title/__price`, модификатор `--featured`
+
+### 4. Практика (Interactive Steps)
+Шаги — исправь «сломанный код» и заполни пропуски, не копируя целиком решение.
+
+1) Скелет компонента
+Создай `src/components/ProductCard.vue` и вставь заготовку:
+```vue
+<template>
+  <article class="___BLOCK___" :class="{ '___BLOCK___--featured': featured }" @click="onOpen">
+    <img class="___BLOCK_____image" :src="image" :alt="title" />
+    <h3 class="___BLOCK_____title">{{ title }}</h3>
+    <div class="___BLOCK_____price">{{ priceLabel }}</div>
+    <div class="___BLOCK_____actions"><slot name="actions" /></div>
+    <slot />
+    <button class="___BLOCK_____buy" @click.stop="onAddToCart">В корзину</button>
+  </article>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+const props = defineProps({
+  title: { type: String, required: true },
+  price: { type: Number, required: true },
+  image: { type: String, required: true },
+  id: { type: [String, Number], required: true },
+  featured: { type: Boolean, default: false }
+})
+const emit = defineEmits(["add-to-cart", "open"]) // TODO: проверь имена событий
+const priceLabel = computed(() => /* TODO: отформатировать props.price */ `___FILL_PRICE___`)
+const onAddToCart = () => emit("add-to-cart")
+const onOpen = () => emit("open", props.id)
+</script>
+
+<style scoped lang="scss">
+.___BLOCK___ {
+  display: grid; gap: 8px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;
+  &--featured { box-shadow: 0 0 0 2px rgba(245, 158, 11, .2); border-color: #f59e0b; }
+  &__image { width: 100%; border-radius: 6px; object-fit: cover; }
+  &__title { font-weight: 600; font-size: 16px; }
+  &__price { font-weight: 700; }
+  &__actions { display: flex; gap: 8px; }
+  &__buy { padding: 8px 12px; border: none; border-radius: 6px; background: #3b82f6; color: #fff; cursor: pointer; }
+}
+</style>
+```
+Замени `___BLOCK___` на `product-card` и реализуй `priceLabel`.
+
+Подсказка: форматирование цены
+```js
+new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(price)
+```
+
+2) Вёрстка и BEM
+- Проверь, что все селекторы соответствуют BEM и пройдут Stylelint
+- Стили должны быть `<style scoped lang="scss">`
+
+3) События и слоты
+- Проверь, что клик по карточке триггерит `open` с `id`
+- Кнопка «В корзину» должна вызывать `add-to-cart` и не триггерить `open` (stop propagation)
+- Вставь в примере родителя именованный слот `actions`
+
+4) Интерактивный чек — предсказание
+- Что попадёт в DOM-классы, если `featured = true`?
+- Ответ: `product-card product-card--featured ...`
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] Использован `<script setup>` и Composition API
+- [ ] События `add-to-cart` и `open` работают корректно
+- [ ] Формат цены корректный для `ru-RU`
+- [ ] BEM + scoped; линтер стилей проходит
+- [ ] Слоты работают (default + actions)
+
+### 6. Возможные ошибки (Troubleshooting)
+- Забытый `.stop` на кнопке → карточка открывается при клике «В корзину»
+- Форматтер цены добавляет копейки → добавь `maximumFractionDigits: 0`
+- Смешение Options API → следуй `<script setup>` и не используй `export default`
+- Нарушение BEM → приведи классы к `product-card__*` и `product-card--*`
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```vue
+<template>
+  <article class="product-card" :class="{ 'product-card--featured': featured }" @click="onOpen">
+    <img class="product-card__image" :src="image" :alt="title" />
+    <h3 class="product-card__title">{{ title }}</h3>
+    <div class="product-card__price">{{ priceLabel }}</div>
+    <div class="product-card__actions"><slot name="actions" /></div>
+    <slot />
+    <button class="product-card__buy" @click.stop="onAddToCart">В корзину</button>
+  </article>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+const props = defineProps({
+  title: { type: String, required: true },
+  price: { type: Number, required: true },
+  image: { type: String, required: true },
+  id: { type: [String, Number], required: true },
+  featured: { type: Boolean, default: false }
+})
+const emit = defineEmits(['add-to-cart','open'])
+const priceLabel = computed(() => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(props.price))
+const onAddToCart = () => emit('add-to-cart')
+const onOpen = () => emit('open', props.id)
+</script>
+
+<style scoped lang="scss">
+.product-card {
+  display: grid; gap: 8px; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px;
+  &--featured { box-shadow: 0 0 0 2px rgba(245, 158, 11, .2); border-color: #f59e0b; }
+  &__image { width: 100%; border-radius: 6px; object-fit: cover; }
+  &__title { font-weight: 600; font-size: 16px; }
+  &__price { font-weight: 700; }
+  &__actions { display: flex; gap: 8px; }
+  &__buy { padding: 8px 12px; border: none; border-radius: 6px; background: #3b82f6; color: #fff; cursor: pointer; }
+}
+</style>
+```
+</details>
+
+---
+
 Вот структура курса по **Vue 3** для проекта **VueExpert**.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

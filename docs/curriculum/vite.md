@@ -1,3 +1,88 @@
+# ⚡️ Vite во VueExpert: Dev-Proxy и Prod-оптимизация (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+У тебя фронт на 5173 и бэкенд на 8000. Браузер режет запросы CORS-ом в деве, а прод сборка тяжелеет и грузится медленно. Нужно: прокинуть proxy и оптимизировать бандл.
+
+### 1. Техническое Задание (ТЗ)
+- Файл: `vite.config.js`
+- Задача: Настроить dev proxy `/api` → `http://localhost:8000` с поддержкой WebSocket на `/ws`; включить разбивку чанков для вендоров.
+- Условия: сохранить текущие плагины; не ломать Playwright Preview; учесть env.
+
+### 2. Референс (Visual/Logic Target)
+- Dev запрос: `fetch('/api/health')` уходит на 8000
+- WebSocket: `new WebSocket('ws://localhost:5173/ws')` прокидывается на 8000
+- Prod: `vendor.js` отдельным файлом
+
+### 3. Теория (Just-in-Time)
+- `server.proxy` решает CORS в Dev, в проде решает Nginx
+- Rollup `manualChunks` для вендоров
+- `import.meta.env` для переменных окружения
+
+### 4. Практика (Interactive Steps)
+Вставь заготовку в `vite.config.js` и дополни пропуски:
+```js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+export default defineConfig({
+  plugins: [vue()],
+  server: {
+    proxy: {
+      '/api': { target: 'http://localhost:8000', changeOrigin: true, ___FILL___: true },
+      '/ws':   { target: 'ws://localhost:8000', changeOrigin: true, ws: true }
+    }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: { vendor: ['vue'] /* ___FILL_MORE_LIBS___ */ }
+      }
+    }
+  }
+})
+```
+Подсказка: для `/api` включи `rewrite: (p) => p.replace(/^\/api/, '/api')` при необходимости; для WS — `ws: true`.
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] CORS исчез в Dev, фронт ходит на `/api`
+- [ ] WS работает через `/ws`
+- [ ] В проде появился `vendor.js`
+- [ ] Unit/e2e остаются зелёными
+
+### 6. Возможные ошибки (Troubleshooting)
+- Забыл `ws: true` — вебсокет не коннектится
+- Неверный target протокол (`http` vs `ws`)
+- Сломал preview — проверь `npm run preview` и PW_BASE_URL
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+export default defineConfig({
+  plugins: [vue()],
+  server: {
+    proxy: {
+      '/api': { target: 'http://localhost:8000', changeOrigin: true },
+      '/ws':   { target: 'ws://localhost:8000', changeOrigin: true, ws: true }
+    }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['vue']
+        }
+      }
+    }
+  }
+})
+```
+</details>
+
+---
+
 Вот структура курса по **Vite** для проекта **VueExpert**.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

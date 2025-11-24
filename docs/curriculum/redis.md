@@ -1,3 +1,76 @@
+# 🔴 Redis во VueExpert: Кэш, счётчики и Lua (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+Нужно быстро: кэшировать списки товаров, защищать API от перегрузки и считать рейтинги. Redis поможет, но только если использовать его как нужно.
+
+### 1. Техническое Задание (ТЗ)
+- Файлы: `backend/app/main.py`, `backend/app/database.py`
+- Задача: добавить Rate Limiter middleware и кэширование `/products` через Redis.
+- Условия: использовать `redis.asyncio.from_url(..., decode_responses=True)`; TTL для кэша 60с.
+
+### 2. Референс (Visual/Logic Target)
+- `/products` при первом запросе берёт из БД и кладёт в Redis; повторные — из Redis
+- Rate Limiter: >10 запросов/мин — `429 Too Many Requests`
+
+### 3. Теория (Just-in-Time)
+- In-Memory скорость, атомарность INCR, зачем decode_responses
+- Cache-Aside, проблема Stampede
+
+### 4. Практика (Interactive Steps)
+Заготовки для дополнения:
+```py
+# middleware.py
+async def rate_limiter(request, call_next):
+    # ___FILL___: ключ по IP, INCR, EXPIRE, вернуть 429 если порог превышен
+
+# repository/products.py
+async def list_products(db):
+    # ___FILL___: сначала проверь Redis, потом БД, потом запиши в Redis
+```
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] Кэширует список `/products` на 60с
+- [ ] Ограничивает запросы >10/мин по IP
+- [ ] Асинхронный клиент Redis
+
+### 6. Возможные ошибки (Troubleshooting)
+- Блокирующий клиент → event loop стопорится
+- Неочищенный кэш → устаревшие данные
+- Неверный ключ rate limiting → ограничение не работает
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```py
+import redis.asyncio as redis
+from fastapi import Request, HTTPException
+
+r = redis.from_url('redis://localhost:6379', decode_responses=True)
+
+async def rate_limiter(request: Request, call_next):
+    ip = request.client.host
+    key = f"rate:{ip}"
+    count = await r.incr(key)
+    if count == 1:
+        await r.expire(key, 60)
+    if count > 10:
+        raise HTTPException(status_code=429, detail='Too Many Requests')
+    return await call_next(request)
+
+async def list_products(db):
+    key = 'products:list'
+    data = await r.get(key)
+    if data:
+        return json.loads(data)
+    rows = await db.fetch_products()
+    await r.setex(key, 60, json.dumps([row.to_dict() for row in rows]))
+    return rows
+```
+</details>
+
+---
+
 Вот структура курса по **Redis** для проекта **VueExpert**.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

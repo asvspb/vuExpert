@@ -1,3 +1,62 @@
+# 🐘 PostgreSQL во VueExpert: миграция и мощные фичи (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+SQLite упирается в ограничения. Бизнес ждёт JSON‑фильтры и конкурентные покупки. Пора мигрировать на Postgres.
+
+### 1. Техническое Задание (ТЗ)
+- Файлы: `.env`, `backend/app/database.py`, Alembic migration
+- Задача: переключиться на `DATABASE_URL=postgresql+asyncpg://...`, поднять контейнер `postgres:16-alpine`, выполнить `alembic upgrade head`.
+- Условия: строгие типы (`DECIMAL`, `UUID`), JSONB для атрибутов.
+
+### 2. Референс (Visual/Logic Target)
+- Приложение работает с Postgres
+- Колонка `products.attributes` JSONB, индексы GIN
+
+### 3. Теория (Just-in-Time)
+- asyncpg vs aiosqlite, MVCC, GIN индексы
+
+### 4. Практика (Interactive Steps)
+Фрагменты к доработке:
+```yaml
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_USER=user
+      - POSTGRES_DB=app
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+```
+```py
+engine = create_async_engine(os.getenv("DATABASE_URL"), echo=False)
+```
+```sql
+ALTER TABLE products ADD COLUMN attributes JSONB;
+CREATE INDEX IF NOT EXISTS idx_products_attributes ON products USING GIN (attributes);
+```
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] DATABASE_URL активен
+- [ ] Alembic применён
+- [ ] JSONB + GIN на месте
+
+### 6. Возможные ошибки (Troubleshooting)
+- Неверный DSN → драйвер не подключается
+- Без GIN поиск по JSONB медленный
+- Неверные типы (FLOAT для денег) → используйте DECIMAL
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```env
+DATABASE_URL=postgresql+asyncpg://user:pass@localhost:5432/app
+```
+</details>
+
+---
+
 Вот структура курса по **PostgreSQL** для проекта **VueExpert**.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

@@ -1,3 +1,66 @@
+# 🛡️ Security во VueExpert: от уязвимостей к защитам (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+В баг‑репортах всплывают XSS и утечки токенов. Нужен минимум обязательных защит: XSS, Secrets, JWT/CSRF и Rate Limiting.
+
+### 1. Техническое Задание (ТЗ)
+- Файлы: `backend/app/main.py`, `backend/app/security.py`
+- Задача: добавить CSP и Security Headers, внедрить Rate Limiter на Redis, хранить Refresh Token в HttpOnly Cookie, исключить опасный v-html на фронте.
+- Условия: соблюсти CORS для 5173/4173, добавить SameSite для cookie.
+
+### 2. Референс (Visual/Logic Target)
+- Заголовки: `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`
+- `/products` кэшируется, лимит >10/мин даёт 429
+
+### 3. Теория (Just-in-Time)
+- Авто‑эскейпинг Vue и риски v-html
+- JWT в памяти + Refresh в HttpOnly Cookie (и CSRF меры)
+
+### 4. Практика (Interactive Steps)
+Фрагменты к доработке:
+```py
+# app/main.py (headers)
+@app.middleware("http")
+async def security_headers(request, call_next):
+    resp = await call_next(request)
+    resp.headers["Content-Security-Policy"] = "default-src 'self'"
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    return resp
+```
+```py
+# app/middleware.py (rate limit)
+async def rate_limiter(request, call_next):
+    # ___FILL___: ключ по IP, INCR, EXPIRE, 429
+```
+Фронт: убрать `v-html` для пользовательских данных или санитайзить DOMPurify.
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] CSP заголовок задан
+- [ ] HttpOnly + SameSite для Refresh Token
+- [ ] Rate Limiter выдаёт 429 при >10/мин
+- [ ] Нет небезопасного `v-html`
+
+### 6. Возможные ошибки (Troubleshooting)
+- CSP ломает ассеты → разреши нужные источники
+- Не задал SameSite → уязвимость к CSRF
+- Лимитер блокирует всех → ключ должен включать IP/путь
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```py
+@app.middleware("http")
+async def security_headers(request, call_next):
+    resp = await call_next(request)
+    resp.headers["Content-Security-Policy"] = "default-src 'self'"
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    return resp
+```
+</details>
+
+---
+
 Вот подробная структура курса по **Security (Безопасность)** для проекта **VueExpert**.
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 

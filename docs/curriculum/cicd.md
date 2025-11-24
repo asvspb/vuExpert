@@ -1,5 +1,84 @@
 > См. правила оценки: [MODULE_ASSESSMENT.md](./MODULE_ASSESSMENT.md)
 
+# 🚀 CI/CD во VueExpert: от локальных проверок к конвейерам (Урок в формате MASTER_PROMPT)
+
+### Контекст (Сюжет)
+PR‑ы иногда падают из‑за линтинга или нестабильных тестов. Нужен минимальный, но строгий конвейер: линтеры в fail‑mode, покрытие артефактами и e2e на preview.
+
+### 1. Техническое Задание (ТЗ)
+- Файл: `.github/workflows/ci.yml`
+- Задача: включить Stylelint в фронтовом job, перевести ESLint/Ruff в fail‑on‑error, сохранять coverage как артефакт.
+- Условия: e2e работают по PW_BASE_URL на 4173.
+
+### 2. Референс (Visual/Logic Target)
+- Пайплайн падает, если есть ошибки линтинга
+- Появляются артефакты coverage‑frontend/coverage‑backend
+
+### 3. Теория (Just-in-Time)
+- Почему fail‑fast ускоряет обратную связь
+- Артефакты в Actions: удобнее дебажить
+
+### 4. Практика (Interactive Steps)
+Вставь шаги в frontend job:
+```yaml
+- name: Lint (eslint + stylelint)
+  run: |
+    npx eslint .
+    npx stylelint "**/*.{vue,scss,css}"
+- name: Unit tests (Vitest) with coverage
+  run: npm run test:coverage
+- name: Upload coverage (frontend)
+  uses: actions/upload-artifact@v4
+  with:
+    name: coverage-frontend
+    path: coverage/**
+```
+И в backend job добавь upload покрытия pytest.
+
+### 5. Чек-лист Самопроверки (Verification)
+- [ ] Линтеры в fail‑mode
+- [ ] Артефакты coverage загружаются
+- [ ] e2e идут против preview 4173
+
+### 6. Возможные ошибки (Troubleshooting)
+- CI зелёный, но линтер пропущен → проверь, что нет `|| true`
+- Неверный путь к coverage → артефакт пустой
+- PW_BASE_URL не задан → e2e падают
+
+### 7. Решение (Spoiler)
+<details>
+<summary>Показать эталон</summary>
+
+```yaml
+name: CI
+on: [push, pull_request]
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '18', cache: 'npm' }
+      - run: npm ci
+      - name: Lint (eslint + stylelint)
+        run: |
+          npx eslint .
+          npx stylelint "**/*.{vue,scss,css}"
+      - run: npm run test:coverage
+      - name: Upload coverage (frontend)
+        uses: actions/upload-artifact@v4
+        with: { name: coverage-frontend, path: coverage/** }
+      - run: npx playwright install --with-deps
+      - run: npm run build
+      - run: |
+          npm run preview -- --port 4173 &
+          npx wait-on http://localhost:4173
+      - run: PW_BASE_URL=http://localhost:4173 npm run e2e
+```
+</details>
+
+---
+
 # 🚀 CI/CD: от локальных проверок к конвейерам
 
 Метафора: у вас есть цех (репозиторий), где продукт проходит линии контроля качества — юнит/интеграционные/E2E тесты, линтеры и измерение покрытия. CI — это конвейер, CD — доставка готового продукта.
