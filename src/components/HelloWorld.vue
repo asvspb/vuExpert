@@ -6,7 +6,8 @@
 </template>
 
 <script setup>
-const props = defineProps({
+// Define props for template usage (no local variable needed)
+defineProps({
   msg: String,
   description: String,
 })
