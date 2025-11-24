@@ -11,14 +11,20 @@
 - Условия: использовать `redis.asyncio.from_url(..., decode_responses=True)`; TTL для кэша 60с.
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: кэширование и лимитинг работают
+- Advanced: предотвращён cache stampede, корректные ключи
 - `/products` при первом запросе берёт из БД и кладёт в Redis; повторные — из Redis
 - Rate Limiter: >10 запросов/мин — `429 Too Many Requests`
 
 ### 3. Теория (Just-in-Time)
+- Basic: in‑memory скорость, INCR/EXPIRE
+- Advanced: Lua для атомарности, шаблоны инвалидации
 - In-Memory скорость, атомарность INCR, зачем decode_responses
 - Cache-Aside, проблема Stampede
 
 ### 4. Практика (Interactive Steps)
+- Basic: реализовать cache‑aside и rate limiter
+- Advanced: добавить Lua‑скрипт, продумать инвалидацию
 Заготовки для дополнения:
 ```py
 # middleware.py
@@ -31,6 +37,10 @@ async def list_products(db):
 ```
 
 ### 5. Чек-лист Самопроверки (Verification)
+- Basic:
+  - [ ] TTL на кэш установлен
+- Advanced:
+  - [ ] учтён stampede, выбраны ключи
 - [ ] Кэширует список `/products` на 60с
 - [ ] Ограничивает запросы >10/мин по IP
 - [ ] Асинхронный клиент Redis

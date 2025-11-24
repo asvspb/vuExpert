@@ -100,4 +100,8 @@ app.add_middleware(
 ```
 </details>
 
+## Связанные материалы
+- Авторизация (JWT/refresh): [auth.md](./auth.md)
+- Безопасность заголовков: [security.md](./security.md)
+
 ---

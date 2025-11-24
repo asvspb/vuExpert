@@ -11,15 +11,21 @@
 - Условия: один Session на запрос; явные транзакции при изменениях.
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: engine+session, DI, init схемы
+- Advanced: конфиг пулов, retry‑политика, транзакционные шаблоны
 - Подключение к `sqlite+aiosqlite:///...`
 - DI: `Depends(get_db)` в роутере
 - Логика транзакции с `async with session.begin()`
 
 ### 3. Теория (Just-in-Time)
+- Basic: async API различия
+- Advanced: expire_on_commit=False, управление жизненным циклом соединений
 - Разница sync/async в SQLAlchemy 2.0; зачем `expire_on_commit=False`
 - Почему `engine.begin()` безопаснее для DDL
 
 ### 4. Практика (Interactive Steps)
+- Basic: настроить engine/session/DI
+- Advanced: добавить init/migrate шагообразно, транзакции на запись
 Вставь заготовку и дополни пропуски:
 ```py
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
@@ -32,6 +38,10 @@ async def get_db():
 ```
 
 ### 5. Чек-лист Самопроверки (Verification)
+- Basic:
+  - [ ] async engine/session работают
+- Advanced:
+  - [ ] пулы/ретраи настроены
 - [ ] async engine + async_sessionmaker
 - [ ] DI: один Session на запрос
 - [ ] Явные транзакции при изменениях

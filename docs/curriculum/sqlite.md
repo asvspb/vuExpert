@@ -13,15 +13,21 @@
   - Тест: добавить запись и прочитать её обратно
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: схема orders(id, user_id, total_amount, created_at)
+- Advanced: индексы, внешние ключи, ограничения уникальности
 ```
 orders(id PK, user_id, total_amount, created_at)
 ```
 
 ### 3. Теория (Just-in-Time)
+- Basic: типы, PK/FK, параметризованные запросы
+- Advanced: транзакции, уровни изоляции, блокировки
 - Manifest typing SQLite, PK/FK, почему нельзя собирать SQL-строки плюсами
 - Async ORM vs sqlite3, когда переключаться на PostgreSQL
 
 ### 4. Практика (Interactive Steps)
+- Basic: создать таблицу и CRUD, написать тест
+- Advanced: добавить индексы и ограничения, покрыть edge‑кейсы
 1) DDL (SQL)
 ```sql
 CREATE TABLE IF NOT EXISTS orders (
@@ -39,11 +45,17 @@ CREATE TABLE IF NOT EXISTS orders (
 - Напиши проверку с httpx.AsyncClient или юнит-тестом модели
 
 ### 5. Чек-лист Самопроверки (Verification)
+- Basic:
+  - [ ] Нет конкатенации SQL
+- Advanced:
+  - [ ] Индексы/ограничения на месте
 - [ ] Нет конкатенации SQL-строк
 - [ ] PK, NOT NULL, DEFAULT верно заданы
 - [ ] Тесты проходят
 
 ### 6. Возможные ошибки (Troubleshooting)
+- Basic: database locked
+- Advanced: конкуренция транзакций, deadlocks
 - Database locked → используй WAL и корректные транзакции
 - Типы/nullable → проверь схемы и валидацию
 

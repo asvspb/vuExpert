@@ -13,14 +13,20 @@ PR‑ы иногда падают из‑за линтинга или неста
 - Условия: e2e работают по PW_BASE_URL на 4173.
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: пайплайн падает на ошибках линтера
+- Advanced: артефакты coverage, логи при падениях, стабильные e2e
 - Пайплайн падает, если есть ошибки линтинга
 - Появляются артефакты coverage‑frontend/coverage‑backend
 
 ### 3. Теория (Just-in-Time)
+- Basic: fail‑fast, быстрее обратная связь
+- Advanced: артефакты/кэш/матрица
 - Почему fail‑fast ускоряет обратную связь
 - Артефакты в Actions: удобнее дебажить
 
 ### 4. Практика (Interactive Steps)
+- Basic: линтеры в fail‑mode, vitest coverage
+- Advanced: upload артефактов, matrix, e2e против preview
 Вставь шаги в frontend job:
 ```yaml
 - name: Lint (eslint + stylelint)

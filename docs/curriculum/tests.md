@@ -11,14 +11,20 @@
 - Условия: покрытие backend ≥ 60% (или выше в CI), асинхронные тесты через `pytest.mark.anyio`.
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: RED→GREEN→REFACTOR цикл и интеграционный тест 201
+- Advanced: стабильные тесты, фикстуры, покрытие артефактами
 - RED → GREEN → REFACTOR цикл
 - Тест `POST /orders` возвращает 201 и JSON с суммой.
 
 ### 3. Теория (Just-in-Time)
+- Basic: зачем TDD, AsyncClient
+- Advanced: фикстуры, изоляция, testcontainers
 - Почему TDD ускоряет разработку: спецификация через тесты, меньше регрессий
 - AsyncClient vs TestClient: нужен для async‑приложений
 
 ### 4. Практика (Interactive Steps)
+- Basic: падающий юнит‑тест + минимальная реализация
+- Advanced: интеграция с БД/Redis, фикстуры, пороги покрытия
 1) RED: добавь падающий тест
 ```py
 # backend/tests/test_cart.py

@@ -68,4 +68,10 @@ logging.basicConfig(level=logging.INFO)
 ```
 </details>
 
+## Связанные материалы
+- FastAPI (эндпоинты, middleware): [fastapi.md](./fastapi.md)
+- HTTPX (клиенты, таймауты/ретраи): [httpx_essentials.md](./httpx_essentials.md)
+- CI/CD (артефакты логов, стабильность): [cicd.md](./cicd.md)
+- Тестирование (интеграционные): [tests.md](./tests.md)
+
 ---

@@ -129,4 +129,10 @@ async def logout(request: Request, response: Response):
 ```
 </details>
 
+## Связанные материалы
+- Куки: [cookies.md](./cookies.md)
+- Безопасность (CSP, CSRF, Rate limit): [security.md](./security.md)
+- HTTP клиенты и ретраи: [httpx_essentials.md](./httpx_essentials.md)
+- Redis (rate limiting/сессии): [redis.md](./redis.md)
+
 ---

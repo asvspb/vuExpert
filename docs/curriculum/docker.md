@@ -11,14 +11,20 @@
 - Условия: frontend использует Vite; preview проверяется Playwright в CI.
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: dev‑окружение с HMR и preview
+- Advanced: health‑зависимости, кэш зависимостей, slim‑образы
 - `docker compose up` поднимает фронт (5173) и бэк (8000)
 - `npm run build && npm run preview` внутри контейнера слушает 4173
 
 ### 3. Теория (Just-in-Time)
+- Basic: dev vs preview, volumes
+- Advanced: multi‑stage builds, кэширование, слои
 - Разница dev (HMR) vs preview (статическая сборка)
 - Почему нужен `CHOKIDAR_USEPOLLING=1` в Docker для HMR на Windows/Mac
 
 ### 4. Практика (Interactive Steps)
+- Basic: docker compose up для dev
+- Advanced: preview, healthchecks, depends_on: service_healthy, кэш
 1) docker-compose.yml (фрагмент)
 ```yaml
 services:

@@ -11,14 +11,20 @@
 - Условия: явный Timeout, 3 ретрая на временные ошибки.
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: helper кидает при ошибке после таймаута
+- Advanced: предсказуемые ретраи/бэкофф и негативные тесты
 - Helper бросает при исчерпании ретраев
 - In‑process тесты быстрые
 
 ### 3. Теория (Just-in-Time)
+- Basic: Таймауты, быстрые тесты app=app
+- Advanced: Retry-политика, устойчивость
 - Timeout/Retry/Backoff
 - In‑process vs реальная сеть
 
 ### 4. Практика (Interactive Steps)
+- Basic: helper с таймаутом; unit тест
+- Advanced: ретраи/бэкофф; негативные тесты
 Фрагменты к доработке:
 ```python
 async with httpx.AsyncClient(base_url=BASE, timeout=httpx.Timeout(5.0)) as client:

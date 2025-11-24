@@ -11,13 +11,19 @@ SQLite упирается в ограничения. Бизнес ждёт JSON�
 - Условия: строгие типы (`DECIMAL`, `UUID`), JSONB для атрибутов.
 
 ### 2. Референс (Visual/Logic Target)
+- Basic: приложение работает с Postgres
+- Advanced: JSONB+GIN индексы, строгие типы
 - Приложение работает с Postgres
 - Колонка `products.attributes` JSONB, индексы GIN
 
 ### 3. Теория (Just-in-Time)
+- Basic: DSN, asyncpg, alembic
+- Advanced: MVCC, оптимизация запросов, explain analyze
 - asyncpg vs aiosqlite, MVCC, GIN индексы
 
 ### 4. Практика (Interactive Steps)
+- Basic: настроить DATABASE_URL и alembic upgrade
+- Advanced: добавить JSONB+GIN и строгие типы в миграции
 Фрагменты к доработке:
 ```yaml
 services:
