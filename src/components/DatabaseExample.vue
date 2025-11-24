@@ -1,11 +1,11 @@
 <template>
-  <div class="database-section">
+  <section class="database">
     <h2>Примеры работы с базами данных</h2>
     
-    <div class="db-section">
+    <div class="database__section">
       <h3>SQLite</h3>
       <p>SQLite - это встраиваемая система управления реляционными базами данных, не требующая отдельного серверного процесса.</p>
-      <div class="example-code">
+      <div class="database__code">
         <pre><code>
 // Пример подключения к SQLite с использованием SQLAlchemy (на стороне сервера)
 import sqlite3
@@ -22,10 +22,10 @@ with engine.connect() as connection:
       </div>
     </div>
     
-    <div class="db-section">
+    <div class="database__section">
       <h3>Redis</h3>
       <p>Redis - это распределенное хранилище данных в оперативной памяти, часто используемое в качестве кэша, базы данных и брокера сообщений.</p>
-      <div class="example-code">
+      <div class="database__code">
         <pre><code>
 // Пример подключения к Redis (на стороне сервера)
 const redis = require('redis');
@@ -47,17 +47,17 @@ client.on('error', (err) => {
     </div>
     
     <DatabaseConnectionExample />
-  </div>
+  </section>
 </template>
 
 <script setup>
 import DatabaseConnectionExample from './DatabaseConnectionExample.vue'
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @use '../styles/variables.scss' as *;
 
-.database-section {
+.database {
   margin: 20px auto;
   padding: 20px;
   width: 80%;
@@ -68,7 +68,7 @@ import DatabaseConnectionExample from './DatabaseConnectionExample.vue'
     padding-bottom: 10px;
   }
   
-  .db-section {
+  &__section {
     margin: 30px 0;
     
     h3 {
@@ -82,7 +82,7 @@ import DatabaseConnectionExample from './DatabaseConnectionExample.vue'
     }
   }
   
-  .example-code {
+  &__code {
     background-color: $secondary-background;
     border: 1px solid $border-color;
     border-radius: $border-radius;

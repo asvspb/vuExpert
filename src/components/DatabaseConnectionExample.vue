@@ -2,11 +2,11 @@
   <div class="connection-examples">
     <h2>Примеры подключения к базам данных</h2>
     
-    <div class="connection-section">
+    <div class="connection-examples__section">
       <h3>Подключение к SQLite</h3>
       <p>Для подключения к SQLite из Python-приложения (на сервере) используется SQLAlchemy:</p>
       
-      <div class="code-block">
+      <div class="connection-examples__code">
         <pre><code>
 # Установка зависимости
 pip install sqlalchemy aiosqlite
@@ -46,11 +46,11 @@ async def read_item(item_id: int, db: AsyncSession = Depends(get_db)):
       </div>
     </div>
     
-    <div class="connection-section">
+    <div class="connection-examples__section">
       <h3>Подключение к Redis</h3>
       <p>Для подключения к Redis из Node.js приложения используется библиотека redis:</p>
       
-      <div class="code-block">
+      <div class="connection-examples__code">
         <pre><code>
 // Установка зависимости
 npm install redis
@@ -122,7 +122,7 @@ const closeRedisConnection = async () => {
       </div>
     </div>
     
-    <div class="connection-section">
+    <div class="connection-examples__section">
       <h3>Практическое применение</h3>
       <p>В реальных приложениях MySQL и Redis часто используются вместе:</p>
       <ul>
@@ -138,7 +138,7 @@ const closeRedisConnection = async () => {
 // Статический компонент. Логика не требуется — используем `<script setup>` для единообразия.
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @use '../styles/variables.scss' as *;
 @use '../styles/mixins.scss' as *;
 
@@ -154,7 +154,7 @@ const closeRedisConnection = async () => {
     @include responsive-font($font-size-large, $font-size-xlarge);
   }
   
-  .connection-section {
+  &__section {
     margin-bottom: $padding-large;
     padding: $padding-medium;
     border: 1px solid $border-color;
@@ -183,7 +183,7 @@ const closeRedisConnection = async () => {
     }
   }
   
-  .code-block {
+  &__code {
     background-color: #2d2d2d;
     color: #f8f8f2;
     border-radius: $border-radius;

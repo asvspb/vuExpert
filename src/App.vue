@@ -10,14 +10,16 @@
     </ul>
     <p>Все компоненты проекта будут созданы с нуля, чтобы вы могли понять каждую часть системы.</p>
 
-    <div class="example-container">
-      <h2>Пример использования SCSS</h2>
-      <p class="scss-example">Этот текст стилизован с использованием SCSS</p>
-      <div class="nested-example">
-        <p>Это вложенный элемент с наследованием стилей</p>
-        <button class="custom-button">Нажми меня</button>
+    <section class="example">
+      <div class="example__container">
+        <h2 class="example__title">Пример использования SCSS</h2>
+        <p class="example__text">Этот текст стилизован с использованием SCSS</p>
+        <div class="example__nested">
+          <p class="example__nested-text">Это вложенный элемент с наследованием стилей</p>
+          <button class="example__button">Нажми меня</button>
+        </div>
       </div>
-    </div>
+    </section>
 
     <DatabaseExample />
 
@@ -44,39 +46,45 @@ import DatabaseExample from './components/DatabaseExample.vue'
     padding: 0 20px;
   }
 
-  .example-container {
-    @include container(800px);
-    @include shadow(2);
-    margin: 20px auto;
-    padding: $padding-medium;
-    border: 1px solid $border-color;
-    border-radius: $border-radius;
-    background-color: $background-color;
-  }
+  .example {
+    &__container {
+      @include container(800px);
+      @include shadow(2);
+      margin: 20px auto;
+      padding: $padding-medium;
+      border: 1px solid $border-color;
+      border-radius: $border-radius;
+      background-color: $background-color;
+    }
 
-  .scss-example {
-    font-size: $font-size-large;
-    color: $accent-color;
-    margin: 15px 0;
-    @include responsive-font($font-size-medium, $font-size-large);
-  }
+    &__title {
+      margin-bottom: 10px;
+    }
 
-  .nested-example {
-    padding: $padding-medium;
-    background-color: $secondary-background;
-    border-radius: $border-radius;
-    margin-top: $padding-medium;
+    &__text {
+      font-size: $font-size-large;
+      color: $accent-color;
+      margin: 15px 0;
+      @include responsive-font($font-size-medium, $font-size-large);
+    }
 
-  p {
-    margin: 10px 0;
-    font-weight: bold;
-  }
+    &__nested {
+      padding: $padding-medium;
+      background-color: $secondary-background;
+      border-radius: $border-radius;
+      margin-top: $padding-medium;
 
-  .custom-button {
-    @include button-style($button-bg-color);
-    padding: 10px 20px;
-    font-size: $font-size-medium;
-  }
+      &-text {
+        margin: 10px 0;
+        font-weight: bold;
+      }
+    }
+
+    &__button {
+      @include button-style($button-bg-color);
+      padding: 10px 20px;
+      font-size: $font-size-medium;
+    }
   }
 
   h1 {

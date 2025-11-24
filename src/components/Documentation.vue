@@ -1,8 +1,8 @@
 <template>
-  <div class="documentation">
+  <section class="documentation">
     <h1>Документация учебного проекта</h1>
     
-    <section class="doc-section">
+    <section class="documentation__section">
       <h2>Vue.js</h2>
       <p>Vue.js - это прогрессивный фреймворк для создания пользовательских интерфейсов. В отличие от монолитных фреймворков, Vue можно использовать как в отдельных частях приложения, так и для создания полноценных одностраничных приложений (SPA).</p>
       
@@ -15,7 +15,7 @@
       </ul>
       
       <h3>Примеры использования</h3>
-      <div class="code-example">
+      <div class="documentation__code">
         <pre><code>
 // Объявление компонента (Options API — для сравнения)
 export default {
@@ -40,7 +40,7 @@ export default {
       </div>
     </section>
     
-    <section class="doc-section">
+    <section class="documentation__section">
       <h2>SCSS (Sass)</h2>
       <p>SCSS - это метаязык на основе CSS, который добавляет улучшения к стандартному CSS. Это позволяет писать более чистый, структурированный и поддерживаемый код стилей.</p>
       
@@ -54,7 +54,7 @@ export default {
       </ul>
       
       <h3>Примеры использования</h3>
-      <div class="code-example">
+      <div class="documentation__code">
         <pre><code>
 // Переменные
 $primary-color: #3498db;
@@ -85,7 +85,7 @@ $font-size: 16px;
       </div>
     </section>
     
-    <section class="doc-section">
+    <section class="documentation__section">
       <h2>SQLite</h2>
       <p>SQLite - это встраиваемая система управления реляционными базами данных, не требующая отдельного серверного процесса. В отличие от других СУБД, SQLite хранит всю базу данных, включая определения, таблицы, индексы и данные, в одном файле на обычной файловой системе.</p>
       
@@ -98,7 +98,7 @@ $font-size: 16px;
       </ul>
       
       <h3>Примеры SQL-запросов</h3>
-      <div class="code-example">
+      <div class="documentation__code">
         <pre><code>
 -- Создание таблицы
 CREATE TABLE users (
@@ -123,7 +123,7 @@ DELETE FROM users WHERE id = 1;
       </div>
     </section>
     
-    <section class="doc-section">
+    <section class="documentation__section">
       <h2>Redis</h2>
       <p>Redis - это хранилище данных в оперативной памяти (in-memory data store), которое может использоваться в качестве базы данных, кэша и брокера сообщений. Он поддерживает различные структуры данных, такие как строки, хэши, списки, множества и др.</p>
       
@@ -137,7 +137,7 @@ DELETE FROM users WHERE id = 1;
       </ul>
       
       <h3>Примеры операций</h3>
-      <div class="code-example">
+      <div class="documentation__code">
         <pre><code>
 // Установка и получение значения
 SET user:100 "Иван Иванов"
@@ -162,14 +162,14 @@ ZRANGE leaderboard 0 -1 WITHSCORES
         </code></pre>
       </div>
     </section>
-  </div>
+  </section>
 </template>
 
 <script setup>
 // Компонент статический, логики нет — используем `<script setup>` для единообразия
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @use '../styles/variables.scss' as *;
 @use '../styles/mixins.scss' as *;
 
@@ -185,7 +185,7 @@ ZRANGE leaderboard 0 -1 WITHSCORES
     @include responsive-font($font-size-xlarge, 32px);
   }
   
-  .doc-section {
+  &__section {
     margin-bottom: $padding-large;
     padding: $padding-large;
     border: 1px solid $border-color;
@@ -226,7 +226,7 @@ ZRANGE leaderboard 0 -1 WITHSCORES
     }
   }
   
-  .code-example {
+  &__code {
     background-color: #2d2d2d;
     color: #f8f8f2;
     border-radius: $border-radius;
