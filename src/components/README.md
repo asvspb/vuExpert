@@ -4,9 +4,10 @@
 
 ## Описание компонентов
 
-- `DatabaseConnectionExample.vue` - компонент с примером подключения к базе данных
-- `DatabaseExample.vue` - компонент с примером работы с базой данных
-- `Documentation.vue` - компонент для отображения документации
+- `HelloWorld.vue` — пример базового компонента. BEM: `hello-world`, `hello-world__title`, `hello-world__description`
+- `Documentation.vue` — контентные блоки, BEM: `documentation`, `documentation__section`, `documentation__code`
+- `DatabaseExample.vue` — пример интеграции с БД, BEM: `database`, `database__section`, `database__code`
+- `DatabaseConnectionExample.vue` — пример подключения к БД/Redis, BEM: `connection-examples`, `connection-examples__section`, `connection-examples__code`
 
 ## Назначение
 

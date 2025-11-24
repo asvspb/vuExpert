@@ -17,12 +17,18 @@
 В проекте включён Stylelint с поддержкой Vue SFC и SCSS, а также правилами для BEM-нейминга:
 - Блок, элемент, модификатор: `block`, `block__element`, `block--modifier`, `block__element--modifier`
 - Допускаются утилиты с префиксом `u-` и состояния с префиксом `is-`
-- Разрешён список проектных утилит: `btn`, `container`, `responsive-title`, `shadow-1..5`, `gradient-(primary|success|warning)`
+- Допустимы текущие утилиты проекта (allowlist) — планируется миграция к `u-*`
 
-Запуск линтинга:
-- npm run lint — запустит ESLint и Stylelint
+Линтинг:
+- npm run lint — ESLint (включая `eslint-plugin-vuejs-accessibility`) и Stylelint
 - npm run lint:css — только Stylelint
 - npm run lint:css:fix — авто-исправление форматирования и некоторых ошибок
+
+Рекомендации:
+- Один корневой блок на компонент (`.component-name`)
+- Элементы и модификаторы через `__` и `--`
+- Состояния через `is-*`
+- Обычно до 3–4 уровней вложенности SCSS
 
 Советы по использованию в Vue-компонентах:
 - Один корневой блок на компонент (`.component-name`)
