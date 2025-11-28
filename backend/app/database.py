@@ -2,8 +2,7 @@ import os
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.asyncio import AsyncSession
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 
 # Универсальная строка подключения. Приоритет: DATABASE_URL -> SQLITE_PATH (дефолт SQLite)
 DATABASE_URL = os.getenv("DATABASE_URL")

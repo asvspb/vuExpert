@@ -15,20 +15,30 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      - name: Install dependencies
+          python-version: '3.12'
+      - name: Setup Poetry
         run: |
           python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
-      - name: Lint (ruff)
-        run: |
-          python -m pip install ruff
-          ruff --version
-          ruff backend || true
-      - name: Test (pytest) with coverage
+          pip install poetry
+      - name: Install deps (backend)
         working-directory: backend
         run: |
-          pytest -q --cov=app --cov-report=term-missing --cov-fail-under=50
+          poetry install --no-interaction --no-ansi --with dev
+      - name: Cache Poetry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pypoetry
+            ~/.cache/pip
+          key: ${{ runner.os }}-poetry-${{ hashFiles('backend/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+      - name: Lint (ruff)
+        working-directory: backend
+        run: poetry run ruff backend || true
+      - name: Test (pytest) with coverage
+        working-directory: backend
+        run: poetry run pytest -q --cov=app --cov-report=term-missing --cov-fail-under=50
 
   frontend:
     runs-on: ubuntu-latest
