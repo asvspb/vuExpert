@@ -1,17 +1,11 @@
 <template>
   <div id="app">
-    <h1>Добро пожаловать в учебный проект Vue, SQLite, Redis и SCSS</h1>
-    <p>Этот проект создан для изучения следующих технологий:</p>
-    <ul>
-      <li><strong>Vue.js</strong> - прогрессивный фреймворк для создания пользовательских интерфейсов</li>
-      <li><strong>SQLite</strong> - встраиваемая реляционная система управления базами данных</li>
-      <li><strong>Redis</strong> - хранилище данных в оперативной памяти (in-memory data store)</li>
-      <li><strong>SCSS</strong> - метаязык на основе CSS, добавляющий улучшения к стандартному CSS</li>
-    </ul>
-    <p>Все компоненты проекта будут созданы с нуля, чтобы вы могли понять каждую часть системы.</p>
+
 
     <section class="example">
       <div class="example__container">
+        <!-- размести ниже блок с переменной message -->
+         <h2>{{ message }}</h2>
         <h2 class="example__title">Пример использования SCSS</h2>
         <p class="example__text">Этот текст стилизован с использованием SCSS</p>
         <div class="example__nested">
@@ -21,15 +15,16 @@
       </div>
     </section>
 
-    <DatabaseExample />
-
-    <Documentation />
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import Documentation from './components/Documentation.vue'
 import DatabaseExample from './components/DatabaseExample.vue'
+import HelloWorld from './components/HelloWorld.vue';
+
+const message = ref('Привет, Vue 3!');
 </script>
 
 <style lang="scss">
