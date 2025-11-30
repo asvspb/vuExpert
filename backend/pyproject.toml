@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "vueexpert-backend"
+name = "vuExpert-backend"
 version = "0.1.0"
 description = "VueExpert Backend (FastAPI, SQLAlchemy async)"
 authors = ["Your Name <you@example.com>"]

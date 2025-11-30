@@ -37,7 +37,7 @@ typing_extensions==4.15.0
 urllib3==2.5.0
 uvicorn==0.38.0
 uvloop==0.22.1
-# Editable Git install with no remote (vueexpert-backend==0.1.0)
+# Editable Git install with no remote (vuExpert-backend==0.1.0)
 -e /home/asv-spb/Dev/my-coding/VueExpert/backend
 watchfiles==1.1.1
 websockets==15.0.1

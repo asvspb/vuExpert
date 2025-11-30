@@ -54,7 +54,7 @@
   <!-- 3. Капстоуны и синхронизация -->
   <rect class="box" x="940" y="110" width="480" height="660" rx="10"/>
   <text class="subtitle" x="960" y="145">Хранение и синхронизация</text>
-  <text class="hint" x="960" y="175">Локально: localStorage.vueexpert_progress</text>
+   <text class="hint" x="960" y="175">Локально: localStorage.vuExpert_progress</text>
   <text class="hint" x="960" y="200">Опция: Синхронизация через API /api/progress</text>
   <text class="hint" x="960" y="225">Идентификатор пользователя: email/uuid (после авторизации)</text>
 

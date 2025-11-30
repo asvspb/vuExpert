@@ -38,7 +38,7 @@ poetry config virtualenvs.in-project true
 
 ```bash
 cd backend
-poetry init --name "vueexpert-backend" --dependency fastapi --dependency "uvicorn[standard]" \
+poetry init --name "vuExpert-backend" --dependency fastapi --dependency "uvicorn[standard]" \
   --dependency redis --dependency aiosqlite --dependency "sqlalchemy" --dependency "sqlalchemy[asyncio]" \
   --dependency python-dotenv --dependency httpx --dependency testcontainers \
   --dev-dependency pytest --dev-dependency pytest-asyncio --dev-dependency pytest-cov --dev-dependency ruff
@@ -208,7 +208,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 ```toml
 [tool.poetry]
-name = "vueexpert-backend"
+name = "vuExpert-backend"
 version = "0.1.0"
 description = "VueExpert Backend (FastAPI, SQLAlchemy async)"
 authors = ["Your Name <you@example.com>"]

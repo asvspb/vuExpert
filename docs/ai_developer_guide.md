@@ -205,9 +205,9 @@ VueExpert/
 
 После внесения изменений в приложение, обязательно проверьте его работоспособность в Docker-контейнерах:
 
-1. Соберите фронтенд-образ: `docker build -t vueexpert-frontend .`
-2. Проверьте запуск фронтенда: `docker run --rm -p 4173:4173 vueexpert-frontend`
-3. Убедитесь, что backend также собирается: `docker build -t vueexpert-backend ./backend`
+1. Соберите фронтенд-образ: `docker build -t vuExpert-frontend .`
+2. Проверьте запуск фронтенда: `docker run --rm -p 4173:4173 vuExpert-frontend`
+3. Убедитесь, что backend также собирается: `docker build -t vuExpert-backend ./backend`
 4. Проверьте запуск всех сервисов через docker-compose (если доступна более новая версия Docker API):
    `docker-compose up --build`
 
