@@ -4,13 +4,13 @@
 @mixin responsive-font($min-size, $max-size) {
   $min-width: 320px;
   $max-width: 1200px;
-  
+
   font-size: $min-size;
-  
+
   @media screen and (min-width: $min-width) {
     font-size: calc(#{$min-size} + #{($max-size - $min-size)} * ((100vw - #{$min-width}) / #{$max-width - $min-width}));
   }
-  
+
   @media screen and (min-width: $max-width) {
     font-size: $max-size;
   }

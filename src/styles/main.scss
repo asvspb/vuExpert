@@ -27,15 +27,15 @@ body {
 // Кнопки
 .btn {
   @include button-style($button-bg-color);
-  
+
   &--secondary {
     @include button-style(#6c757d);
   }
-  
+
   &--success {
     @include button-style(#28a745);
   }
-  
+
   &--danger {
     @include button-style(#dc3545);
   }
@@ -85,7 +85,7 @@ body {
   .container {
     padding: 0 10px;
   }
-  
+
   body {
     font-size: $font-size-small;
   }
