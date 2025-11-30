@@ -11,6 +11,11 @@
         <div class="example__nested">
           <p class="example__nested-text">Это вложенный элемент с наследованием стилей</p>
           <button class="example__button">Нажми меня</button>
+          <p>Счетчик: {{ count }}</p>
+          <button @click="increment">Увеличить счетчик</button>
+          <button @click="reset">Сбросить счетчик</button>
+          <button @click="toggleMessage">Изменить сообщение</button>
+
         </div>
       </div>
     </section>
@@ -25,6 +30,16 @@ import DatabaseExample from './components/DatabaseExample.vue'
 import HelloWorld from './components/HelloWorld.vue';
 
 const message = ref('Привет, Vue 3!');
+const count = ref(0);
+const increment = () => {
+  count.value++;
+};
+const reset = () => {
+  count.value = 0;
+};
+const toggleMessage = () => {
+  message.value = message.value === 'Привет, Vue 3!' ? 'Сообщение изменено!' : 'Привет, Vue 3!';
+};
 </script>
 
 <style lang="scss">
