@@ -29,7 +29,7 @@ body {
   @include button-style($button-bg-color);
 
   &--secondary {
-    @include button-style(#6c757d);
+    @include button-style(#06345d);
   }
 
   &--success {

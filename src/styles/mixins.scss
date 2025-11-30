@@ -53,6 +53,13 @@
   padding: 0 15px;
 }
 
+// Миксин для flex-контейнера
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 // Миксин для создания кнопок
 @mixin button-style($bg-color, $text-color: white) {
   background-color: $bg-color;

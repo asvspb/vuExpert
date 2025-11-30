@@ -5,16 +5,18 @@
     <section class="example">
       <div class="example__container">
         <!-- размести ниже блок с переменной message -->
-         <h2>{{ message }}</h2>
+        <h2>{{ message }}</h2>
         <h2 class="example__title">Пример использования SCSS</h2>
         <p class="example__text">Этот текст стилизован с использованием SCSS</p>
         <div class="example__nested">
           <p class="example__nested-text">Это вложенный элемент с наследованием стилей</p>
-          <button class="example__button">Нажми меня</button>
+          <button class="example__button">Нажми меня!</button>
           <p>Счетчик: {{ count }}</p>
-          <button @click="increment">Увеличить счетчик</button>
-          <button @click="reset">Сбросить счетчик</button>
-          <button @click="toggleMessage">Изменить сообщение</button>
+        <div class="inner-container">
+            <button class="example__button--secondary" @click="increment">Увеличить счетчик</button>
+            <button class="example__button--secondary" @click="reset">Сбросить счетчик</button>
+            <button class="example__button--secondary" @click="toggleMessage">Измениeть сообщение</button>
+        </div>
 
         </div>
       </div>
@@ -55,7 +57,10 @@ const toggleMessage = () => {
     margin-top: 60px;
     padding: 0 20px;
   }
-
+  .inner-container {
+    @include flex-center;
+    gap: 10px;
+  }
   .example {
     &__container {
       @include container(800px);
@@ -91,9 +96,13 @@ const toggleMessage = () => {
     }
 
     &__button {
-      @include button-style($button-bg-color);
+      @include button-style($button-primary-bg);
       padding: 10px 20px;
       font-size: $font-size-medium;
+    }
+
+    &__button--secondary {
+      @include button-style($button-secondary-bg);
     }
   }
 
