@@ -4,13 +4,17 @@
 
 ## Структура
 
+- `backend_interactive_plan.md` - Интерактивный план обучения Backend (Python+FastAPI)
 - `bem.md` - Методология БЭМ (Блок-Элемент-Модификатор)
 - `cicd.md` - Непрерывная интеграция и доставка
 - `css.md` - Стилизация и CSS
+- `deep_dive_prompt.md` - Методика и промпт для углубленного изучения
 - `docker.md` - Контейнеризация с Docker
 - `docker_healthcheck.md` - Проверки работоспособности в Docker
 - `fastapi.md` - Фреймворк FastAPI
+- `frontend_interactive_plan.md` - Интерактивный план обучения HTML+CSS+JS
 - `GLOSSARY.md` - Глоссарий терминов
+- `js_complex_concepts.md` - Deep Dive: Замыкания и this в JS
 - `MASTER_PROMPT.md` - Основной промпт для ИИ агентов
 - `META-PROMT.md` - Мета-промпт (возможно, опечатка в названии файла)
 - `MODULE_ASSESSMENT.md` - Оценка модулей
