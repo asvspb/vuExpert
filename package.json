@@ -18,6 +18,7 @@
     "e2e": "playwright test"
   },
   "dependencies": {
+    "element-plus": "^2.11.9",
     "vue": "^3.4.21"
   },
   "devDependencies": {

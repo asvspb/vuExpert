@@ -10,12 +10,12 @@
         <p class="example__text">Этот текст стилизован с использованием SCSS</p>
         <div class="example__nested">
           <p class="example__nested-text">Это вложенный элемент с наследованием стилей</p>
-          <button class="example__button">Нажми меня!</button>
+          <el-button type="primary" class="example__button">Нажми меня!</el-button>
           <p>Счетчик: {{ count }}</p>
         <div class="inner-container">
-            <button class="example__button--secondary" @click="increment">Увеличить счетчик</button>
-            <button class="example__button--secondary" @click="reset">Сбросить счетчик</button>
-            <button class="example__button--secondary" @click="toggleMessage">Измениeть сообщение</button>
+            <el-button class="example__button--secondary" @click="increment">Увеличить счетчик</el-button>
+            <el-button class="example__button--secondary" @click="reset">Сбросить счетчик</el-button>
+            <el-button class="example__button--secondary" @click="toggleMessage">Измениeть сообщение</el-button>
         </div>
 
         </div>
