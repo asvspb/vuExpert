@@ -19,7 +19,9 @@
   },
   "dependencies": {
     "element-plus": "^2.11.9",
-    "vue": "^3.4.21"
+    "pinia": "^3.0.4",
+    "vue": "^3.4.21",
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

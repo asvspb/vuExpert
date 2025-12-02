@@ -1,20 +1,27 @@
 <template>
   <div id="app">
+    <nav class="nav">
+      <router-link to="/">Главная</router-link>
+      <router-link to="/docs">Документация</router-link>
+      <router-link to="/db">База данных</router-link>
+      <router-link to="/hello">Hello</router-link>
+    </nav>
 
+    <router-view />
 
     <section class="example">
       <div class="example__container">
         <!-- размести ниже блок с переменной message -->
-        <h2>{{ message }}</h2>
+        <h2>{{ app.message }}</h2>
         <h2 class="example__title">Пример использования SCSS</h2>
         <p class="example__text">Этот текст стилизован с использованием SCSS</p>
         <div class="example__nested">
           <p class="example__nested-text">Это вложенный элемент с наследованием стилей</p>
           <el-button type="primary" class="example__button">Нажми меня!</el-button>
-          <p>Счетчик: {{ count }}</p>
+          <p>Счетчик: {{ app.counter }} (x2: {{ app.doubleCounter }})</p>
         <div class="inner-container">
-            <el-button class="example__button--secondary" @click="increment">Увеличить счетчик</el-button>
-            <el-button class="example__button--secondary" @click="reset">Сбросить счетчик</el-button>
+            <el-button class="example__button--secondary" @click="app.increment">Увеличить счетчик</el-button>
+            <el-button class="example__button--secondary" @click="app.reset">Сбросить счетчик</el-button>
             <el-button class="example__button--secondary" @click="toggleMessage">Измениeть сообщение</el-button>
         </div>
 
@@ -26,22 +33,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import Documentation from './components/Documentation.vue'
-import DatabaseExample from './components/DatabaseExample.vue'
-import HelloWorld from './components/HelloWorld.vue';
+import { computed } from 'vue'
+import { useAppStore } from './stores/app'
 
-const message = ref('Привет, Vue 3!');
-const count = ref(0);
-const increment = () => {
-  count.value++;
-};
-const reset = () => {
-  count.value = 0;
-};
+const app = useAppStore()
+
 const toggleMessage = () => {
-  message.value = message.value === 'Привет, Vue 3!' ? 'Сообщение изменено!' : 'Привет, Vue 3!';
-};
+  app.setMessage(app.message === 'Привет, Vue 3!' ? 'Сообщение изменено!' : 'Привет, Vue 3!')
+}
 </script>
 
 <style lang="scss">
@@ -56,6 +55,21 @@ const toggleMessage = () => {
     color: $primary-text-color;
     margin-top: 60px;
     padding: 0 20px;
+  }
+  .nav {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+
+    a {
+      color: $primary-text-color;
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      &:hover { background: rgba(0,0,0,0.05); }
+      &.router-link-active { font-weight: bold; }
+    }
   }
   .inner-container {
     @include flex-center;
