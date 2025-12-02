@@ -21,7 +21,7 @@
 
 Весь контент должен строго соответствовать этому стеку:
 
-*   **Frontend:** Vue 3 (Script Setup, Composition API), Vite, SCSS (variables/mixins). **Никакого Options API.**
+*   **Frontend:** Vue 3 (Script Setup, Composition API), Vite, SCSS (variables/mixins), Pinia (state management), Vue Router (routing). **Никакого Options API.**
 *   **Backend:** Python 3.12+, FastAPI, Pydantic v2, SQLAlchemy 2 (async ORM) + PostgreSQL.
 *   **Async:** Полный `async/await` стек (SQLAlchemy[asyncio] + async‑драйвер к PostgreSQL, например `asyncpg`, и `redis.asyncio`).
 *   **Инфраструктура:** Docker Compose (минимум сервисы: `frontend`, `backend`, `redis`, `db`).
