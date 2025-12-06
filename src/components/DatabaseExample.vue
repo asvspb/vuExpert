@@ -55,7 +55,7 @@ import DatabaseConnectionExample from './DatabaseConnectionExample.vue'
 </script>
 
 <style scoped lang="scss">
-@use '../styles/variables.scss' as *;
+@use 'src/styles/variables.scss' as *;
 
 .database {
   margin: 20px auto;

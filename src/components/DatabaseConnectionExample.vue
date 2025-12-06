@@ -137,10 +137,10 @@ const closeRedisConnection = async () => {
 <script setup>
 // Статический компонент. Логика не требуется — используем `<script setup>` для единообразия.
 </script>
-
 <style scoped lang="scss">
-@use '../styles/variables.scss' as *;
-@use '../styles/mixins.scss' as *;
+@use 'src/styles/variables.scss' as *;
+@use 'src/styles/mixins.scss' as *;
+
 
 .connection-examples {
   @include container(1000px);

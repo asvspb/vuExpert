@@ -168,10 +168,10 @@ ZRANGE leaderboard 0 -1 WITHSCORES
 <script setup>
 // Компонент статический, логики нет — используем `<script setup>` для единообразия
 </script>
-
 <style scoped lang="scss">
-@use '../styles/variables.scss' as *;
-@use '../styles/mixins.scss' as *;
+@use 'src/styles/variables.scss' as *;
+@use 'src/styles/mixins.scss' as *;
+
 
 .documentation {
   @include container(1200px);
