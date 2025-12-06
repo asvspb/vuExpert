@@ -18,6 +18,8 @@
     "e2e": "playwright test"
   },
   "dependencies": {
+    "@vueuse/core": "^14.1.0",
+    "axios": "^1.13.2",
     "pinia": "^3.0.4",
     "vue": "^3.4.21",
     "vue-router": "^4.6.3"
