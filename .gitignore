@@ -3,6 +3,7 @@ node_modules/
 .pnpm-store/
 
 # --- Builds & Dist ---
+/docs/
 dist/
 dist-ssr/
 .output/
