@@ -12,9 +12,9 @@
 
 ## Текущие файлы
 
-- `useApi.js` - Composables для работы с API (CRUD операции)
-- `useCounter.js` - Логика счетчика с сохранением в localStorage
-- `useNotify.js` - Система уведомлений
+- `useApi.ts` - Composables для работы с API (CRUD операции)
+- `useCounter.ts` - Логика счетчика с использованием Pinia store
+- `useNotify.ts` - Система уведомлений с использованием Pinia store
 
 ## Для ИИ агентов
 
