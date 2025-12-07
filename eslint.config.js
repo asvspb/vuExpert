@@ -1,9 +1,10 @@
-// ESLint flat config for Vue 3 + Accessibility
+// ESLint flat config for Vue 3 + Accessibility + TypeScript
 // See: https://eslint.org/docs/latest/use/configure/configuration-files-new
 import js from '@eslint/js'
 import vue from 'eslint-plugin-vue'
 import a11y from 'eslint-plugin-vuejs-accessibility'
 import vueParser from 'vue-eslint-parser'
+import tseslint from 'typescript-eslint'
 
 export default [
   {
@@ -16,11 +17,11 @@ export default [
     ]
   },
   {
-    files: ['**/*.{js,vue}'],
+    files: ['**/*.{js,ts,vue}'],
     languageOptions: {
       parser: vueParser,
       parserOptions: {
-        parser: null,
+        parser: tseslint.parser,
         ecmaVersion: 2023,
         sourceType: 'module'
       },
@@ -33,16 +34,20 @@ export default [
     },
     plugins: {
       vue,
-      'vuejs-accessibility': a11y
+      'vuejs-accessibility': a11y,
+      '@typescript-eslint': tseslint.plugin
     },
     rules: {
       ...js.configs.recommended.rules,
+      ...tseslint.configs.recommended.rules,
       ...vue.configs['vue3-recommended'].rules,
       ...a11y.configs.recommended.rules,
       // Project-specific tweaks
       'vue/multi-word-component-names': 'off',
       'vue/no-mutating-props': 'warn',
       'vue/no-v-html': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
 
       // Accessibility examples (can be tightened later)
       'vuejs-accessibility/alt-text': 'error',

@@ -5,11 +5,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // Define props for template usage (no local variable needed)
 defineProps({
-  msg: String,
-  description: String,
+  msg: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    default: ''
+  },
 })
 </script>
 

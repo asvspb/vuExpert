@@ -195,8 +195,22 @@
   </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
+
+interface Dessert {
+  name: string
+  calories: number
+  fat: number
+  carbs: number
+  protein: number
+  iron: string
+}
+
+interface TableHeader {
+  title: string
+  key: string
+}
 
 const sliderValue = ref(50)
 const checkboxValue = ref(true)
@@ -204,7 +218,7 @@ const switchValue = ref(false)
 const radioValue = ref('a')
 const dialog = ref(false)
 
-const headers = [
+const headers: TableHeader[] = [
   { title: 'Десерт (100г)', key: 'name' },
   { title: 'Калории', key: 'calories' },
   { title: 'Жиры (г)', key: 'fat' },
@@ -213,7 +227,7 @@ const headers = [
   { title: 'Железо (%)', key: 'iron' },
 ]
 
-const desserts = [
+const desserts: Dessert[] = [
   {
     name: 'Frozen Yogurt',
     calories: 159,

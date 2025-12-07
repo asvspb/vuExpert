@@ -104,21 +104,14 @@
   </v-app>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useCounter } from './composables/useCounter'
 
 const router = useRouter()
+const { count, increment, reset } = useCounter()
 const message = ref('Привет, Vue 3 с Vuetify!');
-const count = ref(0);
-
-const increment = () => {
-  count.value++;
-};
-
-const reset = () => {
-  count.value = 0;
-};
 
 const toggleMessage = () => {
   message.value = message.value === 'Привет, Vue 3 с Vuetify!' ? 'Сообщение изменено!' : 'Привет, Vue 3 с Vuetify!';

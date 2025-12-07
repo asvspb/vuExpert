@@ -15,7 +15,8 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -30,6 +31,8 @@
     "@eslint/js": "^9.39.1",
     "@playwright/test": "^1.42.1",
     "@types/node": "^20.11.25",
+    "@typescript-eslint/eslint-plugin": "^8.48.1",
+    "@typescript-eslint/parser": "^8.48.1",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitest/coverage-v8": "^1.4.0",
     "@vitest/ui": "^1.4.0",
@@ -45,9 +48,11 @@
     "stylelint-config-recommended-vue": "^1.5.0",
     "stylelint-config-standard-scss": "^13.1.0",
     "stylelint-order": "^6.0.4",
+    "typescript": "^5.9.3",
     "vite": "^5.1.6",
     "vitest": "^1.4.0",
     "vue-eslint-parser": "^9.4.3",
+    "vue-tsc": "^3.1.6",
     "wait-on": "^7.2.0"
   }
 }
