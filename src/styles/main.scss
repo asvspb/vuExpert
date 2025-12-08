@@ -15,7 +15,7 @@
 body {
   font-family: 'Arial', sans-serif;
   line-height: 1.6;
-  color: $primary-text-color;
+ color: $primary-text-color;
   background-color: $background-color;
 }
 
@@ -43,7 +43,7 @@ body {
 
 // Адаптивные шрифты
 .responsive-title {
-  @include responsive-font($font-size-large, $font-size-xlarge);
+ @include responsive-font($font-size-large, $font-size-xlarge);
 }
 
 // Тени
@@ -94,5 +94,16 @@ body {
 @media screen and (max-width: 480px) {
   body {
     font-size: 14px;
+  }
+}
+
+// Совместимость с Vuetify
+.v-application {
+  .container {
+    @include container();
+  }
+  
+  .btn {
+    @include button-style($button-bg-color);
   }
 }

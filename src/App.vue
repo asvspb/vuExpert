@@ -1,28 +1,29 @@
 <template>
-  <div id="app">
+  <v-app id="app">
+    <v-main>
+      <v-container>
+        <section class="example">
+          <div class="example__container">
+            <!-- размести ниже блок с переменной message -->
+            <h2>{{ message }}</h2>
+            <h2 class="example__title">Пример использования SCSS</h2>
+            <p class="example__text">Этот текст стилизован с использованием SCSS</p>
+            <div class="example__nested">
+              <p class="example__nested-text">Это вложенный элемент с наследованием стилей</p>
+              <v-btn class="example__button">Нажми меня!</v-btn>
+              <p>Счетчик: {{ count }}</p>
+            <div class="inner-container">
+                <v-btn @click="increment">Увеличить счетчик</v-btn>
+                <v-btn @click="reset">Сбросить счетчик</v-btn>
+                <v-btn @click="toggleMessage">Измениeть сообщение</v-btn>
+            </div>
 
-
-    <section class="example">
-      <div class="example__container">
-        <!-- размести ниже блок с переменной message -->
-        <h2>{{ message }}</h2>
-        <h2 class="example__title">Пример использования SCSS</h2>
-        <p class="example__text">Этот текст стилизован с использованием SCSS</p>
-        <div class="example__nested">
-          <p class="example__nested-text">Это вложенный элемент с наследованием стилей</p>
-          <button class="example__button">Нажми меня!</button>
-          <p>Счетчик: {{ count }}</p>
-        <div class="inner-container">
-            <button class="example__button--secondary" @click="increment">Увеличить счетчик</button>
-            <button class="example__button--secondary" @click="reset">Сбросить счетчик</button>
-            <button class="example__button--secondary" @click="toggleMessage">Измениeть сообщение</button>
-        </div>
-
-        </div>
-      </div>
-    </section>
-
-  </div>
+            </div>
+          </div>
+        </section>
+      </v-container>
+    </v-main>
+ </v-app>
 </template>
 
 <script setup>
@@ -40,7 +41,7 @@ const reset = () => {
   count.value = 0;
 };
 const toggleMessage = () => {
-  message.value = message.value === 'Привет, Vue 3!' ? 'Сообщение изменено!' : 'Привет, Vue 3!';
+ message.value = message.value === 'Привет, Vue 3!' ? 'Сообщение изменено!' : 'Привет, Vue 3!';
 };
 </script>
 
@@ -60,6 +61,7 @@ const toggleMessage = () => {
   .inner-container {
     @include flex-center;
     gap: 10px;
+    margin-top: 10px;
   }
   .example {
     &__container {
