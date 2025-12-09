@@ -69,3 +69,8 @@ Desktop.ini
 # --- Temporary Files ---
 *.tmp
 *.temp
+
+# --- Lighthouse CI ---
+.lighthouseci/
+lighthouse-report.html
+lighthouse-report.json

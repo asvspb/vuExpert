@@ -1,5 +1,5 @@
 {
-  "name": "vue-sqlite-redis-scss-learning-project",
+  "name": "vuexpert-project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -16,7 +16,10 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "e2e": "playwright test",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "lighthouse": "lighthouse http://localhost:4173 --output=html --output-path=./lighthouse-report.html --only-categories=accessibility",
+    "lighthouse:json": "lighthouse http://localhost:4173 --output=json --output-path=./lighthouse-report.json --only-categories=accessibility",
+    "lighthouse:ci": "lhci autorun"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
@@ -29,6 +32,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.42.1",
     "@types/node": "^20.11.25",
     "@typescript-eslint/eslint-plugin": "^8.48.1",
@@ -41,6 +45,7 @@
     "eslint-plugin-vue": "^9.27.0",
     "eslint-plugin-vuejs-accessibility": "^2.3.1",
     "jsdom": "^24.0.0",
+    "lighthouse": "^13.0.1",
     "postcss-html": "^1.6.0",
     "postcss-scss": "^4.0.9",
     "sass": "^1.93.3",
