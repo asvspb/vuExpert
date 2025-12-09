@@ -1,6 +1,6 @@
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 // Импорты компонентов для tree-shaking
 import { VApp, VMain, VContainer, VRow, VCol, VCard, VCardTitle, VCardText, VCardActions, VBtn, VTextField, VSelect, VIcon } from 'vuetify/components'
