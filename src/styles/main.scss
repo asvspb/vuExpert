@@ -4,6 +4,10 @@
 @use 'variables' as *;
 @use 'mixins' as *;
 
+// Импортируем Google Fonts
+// Используем Roboto как основной шрифт, Montserrat для заголовков и Roboto Mono для кода
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;600;700&family=Roboto+Mono:wght@400;500;700&display=swap');
+
 // Сброс стилей
 * {
   margin: 0;
@@ -13,9 +17,9 @@
 
 // Основные стили приложения
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: $font-primary;
   line-height: 1.6;
-  color: $primary-text-color;
+ color: $primary-text-color;
   background-color: $background-color;
 }
 
@@ -78,6 +82,21 @@ body {
 
 .gradient-warning {
   @include gradient(#ffc107, #f39c12);
+}
+
+// Классы для заголовков и специальных шрифтов
+.heading-1 {
+  font-family: $font-heading;
+  font-weight: 700;
+}
+
+.heading-2 {
+  font-family: $font-heading;
+  font-weight: 600;
+}
+
+.code-block {
+  font-family: $font-mono;
 }
 
 // Адаптивные медиа-запросы

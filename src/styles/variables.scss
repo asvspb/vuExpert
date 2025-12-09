@@ -9,6 +9,12 @@ $button-bg-color: #409eff;
 $button-hover-color: #337ecc;
 
 // Шрифты
+// Основной шрифт для текста
+$font-primary: 'Roboto', sans-serif;
+// Шрифт для заголовков
+$font-heading: 'Montserrat', sans-serif;
+// Моноширинный шрифт для кода
+$font-mono: 'Roboto Mono', monospace;
 $font-size-small: 12px;
 $font-size-medium: 16px;
 $font-size-large: 20px;
