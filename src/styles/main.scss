@@ -105,5 +105,16 @@ body {
   
   .btn {
     @include button-style($button-bg-color);
-  }
+ }
+}
+
+// Кастомизация темы Vuetify
+:root {
+  --v-primary-base: #1976D2;
+  --v-secondary-base: #424242;
+  --v-accent-base: #82B1FF;
+  --v-error-base: #FF5252;
+  --v-info-base: #2196F3;
+ --v-success-base: #4CAF50;
+  --v-warning-base: #FFC107;
 }
