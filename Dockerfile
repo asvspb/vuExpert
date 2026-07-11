@@ -1,7 +1,7 @@
 # Многоэтапная сборка Vite+Vue SPA
 
 # Этап 1: сборка фронтенда
-FROM node:18-alpine AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ COPY . .
 RUN npm run build
 
 # Этап 2: легкий образ для отдачи статики через serve
-FROM node:18-alpine AS runner
+FROM node:20-slim AS runner
 
 WORKDIR /app
 

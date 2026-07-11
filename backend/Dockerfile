@@ -20,7 +20,7 @@ COPY pyproject.toml poetry.lock* ./
 
 # В контейнере удобно ставить в системное окружение (без виртуального env)
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --only main
+    && poetry install --no-interaction --no-ansi --only main --no-root
 
 # Затем копируем остальной код
 COPY .env .env
