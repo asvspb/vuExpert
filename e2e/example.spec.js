@@ -5,12 +5,12 @@ import { test, expect } from '@playwright/test';
 
 test('has title', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle(/Vue/);
+  await expect(page).toHaveTitle(/vuExpert/);
 });
 
 test('has main heading', async ({ page }) => {
   await page.goto('/');
-  const heading = page.locator('h1');
+  const heading = page.locator('h2').first();
   await expect(heading).toBeVisible();
-  await expect(heading).toContainText('Добро пожаловать');
+  await expect(heading).toContainText('Привет, Vue 3 + Tailwind!');
 });
