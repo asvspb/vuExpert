@@ -15,13 +15,6 @@ export default defineConfig({
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
   plugins: [vue(), tailwindcss()],
-  css: {
-    preprocessorOptions: {
-      scss: {
-        silenceDeprecations: ['legacy-js-api']
-      }
-    }
-  },
   test: {
     environment: 'jsdom',
     exclude: [...configDefaults.exclude, 'e2e/*'],
