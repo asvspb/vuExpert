@@ -14,6 +14,8 @@ if not DATABASE_URL:
     else:
         DATABASE_URL = f"sqlite+aiosqlite:///{SQLITE_PATH}"
 
+SYNC_DATABASE_URL = DATABASE_URL.replace("+asyncpg", "").replace("+aiosqlite", "")
+
 # Асинхронный движок и сессия
 engine = create_async_engine(
     DATABASE_URL,
@@ -29,9 +31,13 @@ AsyncSessionLocal = async_sessionmaker(
 )
 
 # Синхронный движок и сессия (для миграций и других синхронных операций)
+connect_args = {}
+if "sqlite" in SYNC_DATABASE_URL:
+    connect_args["check_same_thread"] = False
+
 sync_engine = create_engine(
-    f"sqlite:///{SQLITE_PATH}",
-    connect_args={"check_same_thread": False}
+    SYNC_DATABASE_URL,
+    connect_args=connect_args
 )
 SyncSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=sync_engine)
 

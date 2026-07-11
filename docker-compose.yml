@@ -24,9 +24,10 @@ services:
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      SQLITE_PATH: /app/data/db.sqlite
+      DATABASE_URL: "postgresql+asyncpg://user:password@postgres:5432/vuexpert"
     depends_on:
       - redis
+      - postgres
     volumes:
       - sqlite_data:/app/data
 
@@ -38,7 +39,29 @@ services:
     volumes:
       - redis_data:/data
 
+  postgres:
+    image: postgres:15-alpine
+    container_name: vuExpert-postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: vuexpert
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  postgres_test:
+    image: postgres:15-alpine
+    container_name: vuExpert-postgres-test
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: vuexpert_test
+    ports:
+      - "5433:5432"
+
 volumes:
   redis_data:
   sqlite_data:
-
+  postgres_data:

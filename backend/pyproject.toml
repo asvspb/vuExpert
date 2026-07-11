@@ -14,7 +14,8 @@ aiosqlite = "*"
 python-dotenv = "*"
 httpx = "*"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.44"}
-
+asyncpg = "*"
+psycopg2-binary = "*"
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 pytest-asyncio = "*"
