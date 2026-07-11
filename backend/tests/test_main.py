@@ -1,6 +1,6 @@
 import pytest
 import httpx
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock
 
 @pytest.mark.asyncio
 async def test_health_endpoint(client: httpx.AsyncClient):
@@ -11,17 +11,17 @@ async def test_health_endpoint(client: httpx.AsyncClient):
 
 @pytest.mark.asyncio
 async def test_counter_endpoint(client: httpx.AsyncClient):
-    with patch("app.routers.counter.redis_client.get", return_value="5"):
+    with patch("app.routers.counter.redis_client.get", new=AsyncMock(return_value="5")):
         response = await client.get("/counter")
         assert response.status_code == 200
         assert response.json()["counter"] == 5
         
-    with patch("app.routers.counter.redis_client.incr", return_value=6):
+    with patch("app.routers.counter.redis_client.incr", new=AsyncMock(return_value=6)):
         response = await client.post("/counter")
         assert response.status_code == 200
         assert response.json()["counter"] == 6
         
-    with patch("app.routers.counter.redis_client.set", return_value=True):
+    with patch("app.routers.counter.redis_client.set", new=AsyncMock(return_value=True)):
         response = await client.delete("/counter")
         assert response.status_code == 200
         assert response.json()["counter"] == 0
