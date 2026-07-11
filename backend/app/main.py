@@ -48,7 +48,7 @@ async def startup_event():
 
 @app.get("/health")
 async def health() -> dict:
-    """Простая проверка работы backend и подключения к Redis/SQLite."""
+    """Простая проверка работы backend и подключения к Redis и Базе Данных."""
     try:
         pong = await redis_client.ping()
         redis_status = "ok" if pong else "unreachable"
@@ -56,13 +56,13 @@ async def health() -> dict:
         redis_status = f"error: {exc}"
 
     try:
-        # Проверим возможность подключения к SQLite
+        # Проверим возможность подключения к БД (PostgreSQL/SQLite)
         async with engine.begin():
-            sqlite_status = "ok"
+            db_status = "ok"
     except Exception as exc:  # noqa: BLE001
-        sqlite_status = f"error: {exc}"
+        db_status = f"error: {exc}"
 
-    return {"status": "ok", "redis": redis_status, "sqlite": sqlite_status}
+    return {"status": "ok", "redis": redis_status, "database": db_status}
 
 
 @app.get("/counter")
@@ -72,7 +72,7 @@ async def counter() -> dict:
     return {"counter": value}
 
 
-# Эндпоинты для работы с SQLite
+# Эндпоинты для работы с базой данных (PostgreSQL/SQLite)
 @app.post("/items/", response_model=schemas.Item)
 async def create_item(item: schemas.ItemCreate, db: AsyncSession = Depends(get_db)):
     return await crud.create_item(db=db, item=item)

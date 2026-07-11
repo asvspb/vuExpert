@@ -10,7 +10,7 @@ test('has title', async ({ page }) => {
 
 test('has main heading', async ({ page }) => {
   await page.goto('/');
-  const heading = page.locator('h2').first();
+  const heading = page.locator('h2', { hasText: 'Привет, Vue 3 + Tailwind!' }).first();
   await expect(heading).toBeVisible();
   await expect(heading).toContainText('Привет, Vue 3 + Tailwind!');
 });
