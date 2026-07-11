@@ -35,7 +35,7 @@ jobs:
             ${{ runner.os }}-poetry-
       - name: Lint (ruff)
         working-directory: backend
-        run: poetry run ruff backend || true
+        run: poetry run ruff check . || true
       - name: Test (pytest) with coverage
         working-directory: backend
         run: poetry run pytest -q --cov=app --cov-report=term-missing --cov-fail-under=50
