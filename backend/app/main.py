@@ -72,8 +72,15 @@ async def health() -> dict:
 
 
 @app.get("/counter")
-async def counter() -> dict:
-    """Пример эндпоинта, который использует Redis для счётчика."""
+async def get_counter() -> dict:
+    """Получение текущего значения счётчика из Redis."""
+    value = await redis_client.get("counter")
+    return {"counter": int(value) if value else 0}
+
+
+@app.post("/counter")
+async def increment_counter() -> dict:
+    """Увеличение счётчика в Redis."""
     value = await redis_client.incr("counter")
     return {"counter": value}
 

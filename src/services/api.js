@@ -12,9 +12,20 @@ export const api = {
     }
   },
   
-  async incrementCounter() {
+  async getCounter() {
     try {
       const response = await fetch(`${API_BASE_URL}/counter`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching counter:", error);
+      return null;
+    }
+  },
+  
+  async incrementCounter() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/counter`, { method: 'POST' });
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       return await response.json();
     } catch (error) {

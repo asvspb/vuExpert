@@ -66,10 +66,15 @@ const incrementRedis = async () => {
   }
 }
 
+const loadCounter = async () => {
+  const data = await api.getCounter()
+  if (data && data.counter !== undefined) {
+    redisCounter.value = data.counter
+  }
+}
+
 onMounted(() => {
   checkHealth()
-  // Пытаемся получить текущее значение счетчика без инкремента
-  // Для простоты примера просто сразу делаем +1 при загрузке, чтобы увидеть число
-  incrementRedis()
+  loadCounter()
 })
 </script>
