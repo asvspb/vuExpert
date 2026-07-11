@@ -1,12 +1,25 @@
 # vuExpert
 
-Full-stack проект на Vue 3 и FastAPI с использованием современных архитектурных подходов, PostgreSQL, Redis и Docker.
+Production-ready Vue 3 + FastAPI + PostgreSQL boilerplate.
 
-## Стек технологий
+## 🚀 Стек технологий
 
-*   **Frontend**: Vue 3 (Composition API), Vite, Tailwind CSS v4, Vue Router, Pinia, Vitest, Playwright
-*   **Backend**: FastAPI, Poetry, SQLAlchemy 2.0 (Async), PostgreSQL, Redis, Pytest
-*   **Инфраструктура**: Docker & docker-compose, система версионирования сборок (Vite inject & FastAPI env)
+*   **Бэкенд:** FastAPI, Python 3.12+, SQLAlchemy 2.0 (async), Pydantic
+*   **Фронтенд:** Vue 3, Vite, Tailwind CSS v4, Vue Router, Pinia
+*   **Инфраструктура:** Docker Compose, PostgreSQL 15, Redis 7
+*   **Тестирование:** Pytest (API), Vitest (Unit), Playwright (E2E)
+*   **Качество кода:** Ruff (Python), ESLint, Stylelint
+
+## 🛠️ Быстрый старт (Docker)
+
+```bash
+cp .env.example .env
+cp backend/.env.example backend/.env
+docker-compose up --build
+```
+- Фронтенд: http://localhost:4173
+- Бэкенд API: http://localhost:8000
+- Документация API: http://localhost:8000/docs
 
 ## Архитектура и Лучшие практики
 
@@ -19,7 +32,6 @@ Full-stack проект на Vue 3 и FastAPI с использованием с
 
 Для фронтенда настроен `dependency-cruiser`. Вы можете проверить архитектуру командой `npm run lint:deps` или сгенерировать визуальный граф зависимостей командой `npm run depcruise:graph` (необходим Graphviz).
 
-## Запуск проекта
 
 ### С помощью Docker (рекомендуется)
 Используйте Docker Compose для локального запуска всех сервисов (Frontend, Backend, PostgreSQL, Redis):

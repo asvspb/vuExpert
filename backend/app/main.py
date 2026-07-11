@@ -8,7 +8,7 @@ from .database import engine, Base
 from .redis_client import redis_client
 from .limiter import limiter
 from .settings import settings
-from .routers import health, counter, logs, items, users
+from .routers import health, logs, users
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,7 +34,5 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
-app.include_router(counter.router)
 app.include_router(logs.router)
-app.include_router(items.router)
 app.include_router(users.router)

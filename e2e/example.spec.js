@@ -8,9 +8,9 @@ test('has title', async ({ page }) => {
   await expect(page).toHaveTitle(/vuExpert/);
 });
 
-test('has main heading', async ({ page }) => {
+test('has system dashboard heading', async ({ page }) => {
   await page.goto('/');
-  const heading = page.locator('h2', { hasText: 'Привет, Vue 3 + Tailwind!' }).first();
-  await expect(heading).toBeVisible();
-  await expect(heading).toContainText('Привет, Vue 3 + Tailwind!');
+
+  // Expects page to have a heading with the name of System Health Dashboard.
+  await expect(page.getByRole('heading', { name: 'System Health Dashboard' })).toBeVisible();
 });

@@ -10,20 +10,6 @@ class LogEvent(BaseModel):
     url: Optional[str] = Field(None, max_length=500)
     user_agent: Optional[str] = Field(None, max_length=500)
 
-class ItemBase(BaseModel):
-    name: str = Field(..., max_length=100)
-    description: Optional[str] = Field(None, max_length=500)
-
-class ItemCreate(ItemBase):
-    pass
-
-class Item(ItemBase):
-    id: int
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
-
-    model_config = ConfigDict(from_attributes=True)
-
 class UserBase(BaseModel):
     username: str = Field(..., max_length=50)
     email: EmailStr

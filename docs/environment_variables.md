@@ -10,8 +10,7 @@
 ## Бэкенд (backend/.env)
 
 ### Конфигурация базы данных
-- `DATABASE_URL` - универсальная строка подключения. Если задана — имеет приоритет. Пример для Postgres: postgresql+asyncpg://user:pass@db:5432/app
-- `SQLITE_PATH` - путь к файлу SQLite базы данных (по умолчанию: /app/data/db.sqlite). Используется по умолчанию в учебном режиме.
+- `DATABASE_URL` - Строка подключения к PostgreSQL (`postgresql+asyncpg://user:pass@host:port/db`) | `postgresql+asyncpg://user:password@postgres:5432/vuexpert`
 
 ### Конфигурация Redis
 - `REDIS_HOST` - хост Redis (по умолчанию: redis)

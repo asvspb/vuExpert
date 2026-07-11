@@ -10,7 +10,6 @@
 - `poetry_migration_plan.md` - План миграции на Poetry
 - `project_architecture_and_philosophy.md` - Архитектура и философия проекта
 - `qwen_coder_integration.md` - Интеграция с Qwen Coder
-- `curriculum/` - Учебные материалы по различным технологиям
 - `wireframes/` - Макеты интерфейсов
 
 ## Для ИИ агентов

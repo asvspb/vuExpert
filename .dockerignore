@@ -26,5 +26,4 @@ playwright-report
 # git and docs
 .git
 docs
-knowledge-packs
 e2e

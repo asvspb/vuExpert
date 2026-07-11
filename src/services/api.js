@@ -9,30 +9,6 @@ export const api = {
     }
   },
   
-  async getCounter() {
-    try {
-      return await http('/counter')
-    } catch {
-      return null
-    }
-  },
-  
-  async incrementCounter() {
-    try {
-      return await http('/counter', { method: 'POST' })
-    } catch {
-      return null
-    }
-  },
-
-  async resetCounter() {
-    try {
-      return await http('/counter', { method: 'DELETE' })
-    } catch {
-      return null
-    }
-  },
-  
   async postLog(event) {
     try {
       return await http('/logs', {
