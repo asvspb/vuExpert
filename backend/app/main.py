@@ -1,7 +1,8 @@
 import os
+import logging
 from typing import List
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 import redis.asyncio as redis
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,6 +18,10 @@ from . import crud, schemas
 # Настройки Redis
 REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger("frontend_logger")
 
 APP_VERSION = os.getenv("APP_VERSION", "0.1.0")
 # Приложение FastAPI должно быть создано ДО регистрации обработчиков событий
@@ -71,6 +76,24 @@ async def counter() -> dict:
     """Пример эндпоинта, который использует Redis для счётчика."""
     value = await redis_client.incr("counter")
     return {"counter": value}
+
+
+@app.post("/logs")
+async def collect_logs(event: schemas.LogEvent, request: Request):
+    """Эндпоинт для сбора логов с фронтенда"""
+    client_ip = request.client.host if request.client else "unknown"
+    log_msg = f"ClientIP: {client_ip} | URL: {event.url} | {event.message} | Context: {event.context}"
+    
+    if event.level.lower() == "error":
+        logger.error(log_msg)
+    elif event.level.lower() == "warn":
+        logger.warning(log_msg)
+    elif event.level.lower() == "debug":
+        logger.debug(log_msg)
+    else:
+        logger.info(log_msg)
+        
+    return {"status": "logged"}
 
 
 # Эндпоинты для работы с базой данных (PostgreSQL/SQLite)

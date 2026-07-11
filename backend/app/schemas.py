@@ -1,6 +1,14 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Any, Dict
+
+class LogEvent(BaseModel):
+    level: str
+    message: str
+    context: Optional[Dict[str, Any]] = None
+    timestamp: str
+    url: Optional[str] = None
+    user_agent: Optional[str] = None
 
 # Схемы для Item
 class ItemBase(BaseModel):
