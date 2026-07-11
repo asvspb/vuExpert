@@ -33,6 +33,9 @@ export default [
         console: 'readonly',
         fetch: 'readonly',
         navigator: 'readonly',
+        AbortController: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
         __APP_VERSION__: 'readonly',
         __BUILD_TIME__: 'readonly'
       }

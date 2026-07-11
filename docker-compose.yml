@@ -27,8 +27,15 @@ services:
       REDIS_PORT: 6379
       DATABASE_URL: "postgresql+asyncpg://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-vuexpert}"
     depends_on:
-      - redis
-      - postgres
+      redis:
+        condition: service_started
+      postgres:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
     networks:
       - app_network

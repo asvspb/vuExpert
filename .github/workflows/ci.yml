@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [ main, master ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   backend:
     runs-on: ubuntu-latest
@@ -16,14 +23,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Setup Poetry
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-      - name: Install deps (backend)
-        working-directory: backend
-        run: |
-          poetry install --no-interaction --no-ansi --with dev
       - name: Cache Poetry
         uses: actions/cache@v4
         with:
@@ -33,9 +32,17 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('backend/poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
+      - name: Setup Poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+      - name: Install deps (backend)
+        working-directory: backend
+        run: |
+          poetry install --no-interaction --no-ansi --with dev
       - name: Lint (ruff)
         working-directory: backend
-        run: poetry run ruff check . || true
+        run: poetry run ruff check app tests
       - name: Test (pytest) with coverage
         working-directory: backend
         run: poetry run pytest -q --cov=app --cov-report=term-missing --cov-fail-under=50
@@ -52,14 +59,19 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Lint (eslint + stylelint)
+      - name: Lint (eslint)
         run: |
           npx eslint --version || npm i -D eslint @eslint/js eslint-plugin-vue eslint-plugin-vuejs-accessibility vue-eslint-parser
-          npx stylelint --version || npm i -D stylelint stylelint-config-standard-scss stylelint-config-recommended-vue stylelint-order postcss-html
-          npx eslint . || true
-          npx stylelint "**/*.{vue,scss,css}" || true
+          npx eslint .
       - name: Unit tests (Vitest) with coverage
         run: npm run test:coverage
+      - name: Cache Playwright
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/msplaywright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
       - name: Build frontend

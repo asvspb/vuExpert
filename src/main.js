@@ -33,4 +33,4 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
-app.mount('#app')
+app.mount('#app-root')
