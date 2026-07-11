@@ -36,9 +36,14 @@
         <div class="p-4 bg-blue-50 rounded border border-blue-100 flex flex-col justify-center items-center">
           <h3 class="font-bold mb-1">Счетчик в Redis:</h3>
           <p class="text-3xl font-black text-blue-600 my-2">{{ redisCounter !== null ? redisCounter : '...' }}</p>
-          <button @click="incrementRedis" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full shadow-sm">
-            +1 в Redis
-          </button>
+          <div class="flex gap-2 w-full mt-2">
+            <button @click="incrementRedis" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full shadow-sm">
+              +1
+            </button>
+            <button @click="resetRedis" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition w-full shadow-sm">
+              Сброс
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -61,6 +66,13 @@ const checkHealth = async () => {
 
 const incrementRedis = async () => {
   const data = await api.incrementCounter()
+  if (data && data.counter !== undefined) {
+    redisCounter.value = data.counter
+  }
+}
+
+const resetRedis = async () => {
+  const data = await api.resetCounter()
   if (data && data.counter !== undefined) {
     redisCounter.value = data.counter
   }

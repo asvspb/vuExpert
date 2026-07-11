@@ -33,6 +33,17 @@ export const api = {
       return null;
     }
   },
+
+  async resetCounter() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/counter`, { method: 'DELETE' });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.error("Error resetting counter:", error);
+      return null;
+    }
+  },
   
   async postLog(event) {
     try {

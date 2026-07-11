@@ -85,6 +85,13 @@ async def increment_counter() -> dict:
     return {"counter": value}
 
 
+@app.delete("/counter")
+async def reset_counter() -> dict:
+    """Сброс счётчика в Redis."""
+    await redis_client.set("counter", 0)
+    return {"counter": 0}
+
+
 @app.post("/logs")
 async def collect_logs(event: schemas.LogEvent, request: Request):
     """Эндпоинт для сбора логов с фронтенда"""
