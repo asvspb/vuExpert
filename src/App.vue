@@ -10,7 +10,7 @@
         <p class="example__text">Этот текст стилизован с использованием SCSS</p>
         <div class="example__nested">
           <p class="example__nested-text">Это вложенный элемент с наследованием стилей</p>
-          <button class="example__button">Нажми меня!</button>
+          <button class="example__button" :class="{ 'example__button--inverted': isColorInverted }" @click="toggleColor">Нажми меня!</button>
           <p>Счетчик: {{ count }}</p>
         <div class="inner-container">
             <button class="example__button--secondary" @click="increment">Увеличить счетчик</button>
@@ -41,6 +41,11 @@ const reset = () => {
 };
 const toggleMessage = () => {
   message.value = message.value === 'Привет, Vue 3!' ? 'Сообщение изменено!' : 'Привет, Vue 3!';
+};
+
+const isColorInverted = ref(false);
+const toggleColor = () => {
+  isColorInverted.value = !isColorInverted.value;
 };
 </script>
 
@@ -99,6 +104,11 @@ const toggleMessage = () => {
       @include button-style($button-primary-bg);
       padding: 10px 20px;
       font-size: $font-size-medium;
+      transition: filter 0.3s ease, background-color 0.3s ease;
+
+      &--inverted {
+        filter: invert(100%);
+      }
     }
 
     &__button--secondary {
