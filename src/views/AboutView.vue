@@ -9,8 +9,8 @@
       <p class="font-semibold mb-2">Глобальный счетчик: <span class="text-blue-600 text-2xl">{{ counter.count }}</span></p>
       <p class="text-sm text-gray-500 mb-4">Двойное значение: {{ counter.doubleCount }}</p>
       <button 
-        @click="counter.increment"
         class="bg-blue-600 text-white px-5 py-2.5 rounded hover:bg-blue-700 transition shadow-sm font-medium"
+        @click="counter.increment"
       >
         Увеличить глобальный счетчик
       </button>

@@ -27,7 +27,7 @@
               </span>
             </li>
           </ul>
-          <button @click="checkHealth" class="mt-4 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-1.5 rounded text-sm transition">
+          <button class="mt-4 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-1.5 rounded text-sm transition" @click="checkHealth">
             Обновить статус
           </button>
         </div>
@@ -37,10 +37,10 @@
           <h3 class="font-bold mb-1">Счетчик в Redis:</h3>
           <p class="text-3xl font-black text-blue-600 my-2">{{ redisCounter !== null ? redisCounter : '...' }}</p>
           <div class="flex gap-2 w-full mt-2">
-            <button @click="incrementRedis" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full shadow-sm">
+            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full shadow-sm" @click="incrementRedis">
               +1
             </button>
-            <button @click="resetRedis" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition w-full shadow-sm">
+            <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition w-full shadow-sm" @click="resetRedis">
               Сброс
             </button>
           </div>
