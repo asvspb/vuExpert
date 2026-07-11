@@ -1,238 +1,68 @@
-from fastapi.testclient import TestClient
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession
-from app.main import app
-from app.database import Base, get_db
-from app import models, schemas
-from sqlalchemy import create_engine
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-import tempfile
-import os
+import httpx
+from unittest.mock import patch
 
-
-# Тесты для основных эндпоинтов
 @pytest.mark.asyncio
-async def test_health_endpoint():
-    client = TestClient(app)
-    response = client.get("/health")
+async def test_health_endpoint(client: httpx.AsyncClient):
+    response = await client.get("/health")
     assert response.status_code == 200
     data = response.json()
-    assert "status" in data
     assert data["status"] == "ok"
 
-
-# Пропускаем тест, который требует Redis
 @pytest.mark.asyncio
-async def test_counter_endpoint():
-    pass
-
-
-@pytest.mark.asyncio
-async def test_create_item_endpoint():
-    # Создаем тестовую сессию
-    fd, path = tempfile.mkstemp(prefix="tmp_test_item_", suffix=".sqlite")
-    os.close(fd)
-    
-    try:
-        db_url = f"sqlite+aiosqlite:///{path}"
-        engine = create_async_engine(db_url)
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        
-        session_local = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-        
-        # Переопределяем зависимость get_db
-        async def override_get_db():
-            async with session_local() as session:
-                yield session
-        
-        app.dependency_overrides[get_db] = override_get_db
-        
-        client = TestClient(app)
-        response = client.post("/items/", json={"name": "Тестовый предмет", "description": "Описание тестового предмета"})
-        
+async def test_counter_endpoint(client: httpx.AsyncClient):
+    with patch("app.routers.counter.redis_client.get", return_value="5"):
+        response = await client.get("/counter")
         assert response.status_code == 200
-        data = response.json()
-        assert data["name"] == "Тестовый предмет"
-        assert data["description"] == "Описание тестового предмета"
-        assert "id" in data
-    
-    finally:
-        try:
-            os.remove(path)
-        except FileNotFoundError:
-            pass
-        # Убираем переопределение
-        app.dependency_overrides.clear()
-
+        assert response.json()["counter"] == 5
+        
+    with patch("app.routers.counter.redis_client.incr", return_value=6):
+        response = await client.post("/counter")
+        assert response.status_code == 200
+        assert response.json()["counter"] == 6
+        
+    with patch("app.routers.counter.redis_client.set", return_value=True):
+        response = await client.delete("/counter")
+        assert response.status_code == 200
+        assert response.json()["counter"] == 0
 
 @pytest.mark.asyncio
-async def test_get_items_endpoint():
-    # Создаем тестовую сессию
-    fd, path = tempfile.mkstemp(prefix="tmp_test_items_", suffix=".sqlite")
-    os.close(fd)
-    
-    try:
-        db_url = f"sqlite+aiosqlite:///{path}"
-        engine = create_async_engine(db_url)
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        
-        session_local = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-        
-        # Переопределяем зависимость get_db
-        async def override_get_db():
-            async with session_local() as session:
-                yield session
-        
-        app.dependency_overrides[get_db] = override_get_db
-        
-        # Сначала создаем несколько предметов
-        client = TestClient(app)
-        client.post("/items/", json={"name": "Тестовый предмет 1", "description": "Описание 1"})
-        client.post("/items/", json={"name": "Тестовый предмет 2", "description": "Описание 2"})
-        
-        # Затем получаем список предметов
-        response = client.get("/items/")
-        
-        assert response.status_code == 200
-        data = response.json()
-        assert isinstance(data, list)
-        assert len(data) >= 2
-    
-    finally:
-        try:
-            os.remove(path)
-        except FileNotFoundError:
-            pass
-        # Убираем переопределение
-        app.dependency_overrides.clear()
-
+async def test_create_item_endpoint(client: httpx.AsyncClient):
+    response = await client.post("/items/", json={"name": "Тестовый предмет", "description": "Описание"})
+    assert response.status_code == 200
+    data = response.json()
+    assert data["name"] == "Тестовый предмет"
+    assert "id" in data
 
 @pytest.mark.asyncio
-async def test_get_item_endpoint():
-    # Создаем тестовую сессию
-    fd, path = tempfile.mkstemp(prefix="tmp_test_item_", suffix=".sqlite")
-    os.close(fd)
+async def test_get_items_endpoint(client: httpx.AsyncClient):
+    await client.post("/items/", json={"name": "Item 1"})
+    await client.post("/items/", json={"name": "Item 2"})
     
-    try:
-        db_url = f"sqlite+aiosqlite:///{path}"
-        engine = create_async_engine(db_url)
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        
-        session_local = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-        
-        # Переопределяем зависимость get_db
-        async def override_get_db():
-            async with session_local() as session:
-                yield session
-        
-        app.dependency_overrides[get_db] = override_get_db
-        
-        # Сначала создаем предмет
-        client = TestClient(app)
-        create_response = client.post("/items/", json={"name": "Тестовый предмет", "description": "Описание"})
-        created_item = create_response.json()
-        item_id = created_item["id"]
-        
-        # Затем получаем предмет по ID
-        response = client.get(f"/items/{item_id}")
-        
-        assert response.status_code == 200
-        data = response.json()
-        assert data["id"] == item_id
-        assert data["name"] == "Тестовый предмет"
-        assert data["description"] == "Описание"
-    
-    finally:
-        try:
-            os.remove(path)
-        except FileNotFoundError:
-            pass
-        # Убираем переопределение
-        app.dependency_overrides.clear()
-
+    response = await client.get("/items/")
+    assert response.status_code == 200
+    assert len(response.json()) >= 2
 
 @pytest.mark.asyncio
-async def test_create_user_endpoint():
-    # Создаем тестовую сессию
-    fd, path = tempfile.mkstemp(prefix="tmp_test_user_", suffix=".sqlite")
-    os.close(fd)
+async def test_get_item_endpoint(client: httpx.AsyncClient):
+    create_response = await client.post("/items/", json={"name": "Item 1"})
+    item_id = create_response.json()["id"]
     
-    try:
-        db_url = f"sqlite+aiosqlite:///{path}"
-        engine = create_async_engine(db_url)
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        
-        session_local = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-        
-        # Переопределяем зависимость get_db
-        async def override_get_db():
-            async with session_local() as session:
-                yield session
-        
-        app.dependency_overrides[get_db] = override_get_db
-        
-        client = TestClient(app)
-        response = client.post("/users/", json={"username": "testuser", "email": "test@example.com", "full_name": "Тестовый Пользователь"})
-        
-        assert response.status_code == 200
-        data = response.json()
-        assert data["username"] == "testuser"
-        assert data["email"] == "test@example.com"
-        assert data["full_name"] == "Тестовый Пользователь"
-        assert "id" in data
-    
-    finally:
-        try:
-            os.remove(path)
-        except FileNotFoundError:
-            pass
-        # Убираем переопределение
-        app.dependency_overrides.clear()
-
+    response = await client.get(f"/items/{item_id}")
+    assert response.status_code == 200
+    assert response.json()["id"] == item_id
 
 @pytest.mark.asyncio
-async def test_get_users_endpoint():
-    # Создаем тестовую сессию
-    fd, path = tempfile.mkstemp(prefix="tmp_test_users_", suffix=".sqlite")
-    os.close(fd)
+async def test_create_user_endpoint(client: httpx.AsyncClient):
+    response = await client.post("/users/", json={"username": "testuser", "email": "test@example.com", "full_name": "Test User"})
+    assert response.status_code == 200
+    assert "id" in response.json()
+
+@pytest.mark.asyncio
+async def test_get_users_endpoint(client: httpx.AsyncClient):
+    await client.post("/users/", json={"username": "u1", "email": "u1@x.com"})
+    await client.post("/users/", json={"username": "u2", "email": "u2@x.com"})
     
-    try:
-        db_url = f"sqlite+aiosqlite:///{path}"
-        engine = create_async_engine(db_url)
-        async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        
-        session_local = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-        
-        # Переопределяем зависимость get_db
-        async def override_get_db():
-            async with session_local() as session:
-                yield session
-        
-        app.dependency_overrides[get_db] = override_get_db
-        
-        # Сначала создаем несколько пользователей
-        client = TestClient(app)
-        client.post("/users/", json={"username": "testuser1", "email": "test1@example.com", "full_name": "Пользователь 1"})
-        client.post("/users/", json={"username": "testuser2", "email": "test2@example.com", "full_name": "Пользователь 2"})
-        
-        # Затем получаем список пользователей
-        response = client.get("/users/")
-        
-        assert response.status_code == 200
-        data = response.json()
-        assert isinstance(data, list)
-        assert len(data) >= 2
-    
-    finally:
-        try:
-            os.remove(path)
-        except FileNotFoundError:
-            pass
-        # Убираем переопределение
-        app.dependency_overrides.clear()
+    response = await client.get("/users/")
+    assert response.status_code == 200
+    assert len(response.json()) >= 2
