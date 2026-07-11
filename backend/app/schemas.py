@@ -1,19 +1,18 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, EmailStr
 from datetime import datetime
-from typing import Optional, Any, Dict
+from typing import Optional, Any, Dict, Literal
 
 class LogEvent(BaseModel):
-    level: str
-    message: str
+    level: Literal["debug", "info", "warn", "error"]
+    message: str = Field(..., max_length=1000)
     context: Optional[Dict[str, Any]] = None
     timestamp: str
-    url: Optional[str] = None
-    user_agent: Optional[str] = None
+    url: Optional[str] = Field(None, max_length=500)
+    user_agent: Optional[str] = Field(None, max_length=500)
 
-# Схемы для Item
 class ItemBase(BaseModel):
-    name: str
-    description: Optional[str] = None
+    name: str = Field(..., max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
 
 class ItemCreate(ItemBase):
     pass
@@ -26,11 +25,10 @@ class Item(ItemBase):
     class Config:
         from_attributes = True
 
-# Схемы для User
 class UserBase(BaseModel):
-    username: str
-    email: str
-    full_name: Optional[str] = None
+    username: str = Field(..., max_length=50)
+    email: EmailStr
+    full_name: Optional[str] = Field(None, max_length=100)
 
 class UserCreate(UserBase):
     pass

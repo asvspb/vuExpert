@@ -15,7 +15,9 @@ python-dotenv = "*"
 httpx = "*"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.44"}
 asyncpg = "*"
-psycopg2-binary = "*"
+pydantic-settings = "*"
+slowapi = "*"
+email-validator = "*"
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
 pytest-asyncio = "*"
