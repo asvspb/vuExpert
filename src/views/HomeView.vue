@@ -9,7 +9,7 @@
           <h3 class="font-bold mb-2">Статус инфраструктуры:</h3>
           <ul class="text-sm space-y-2">
             <li class="flex justify-between">
-              <span>Backend API:</span>
+              <span>Backend API <span class="text-gray-400 text-xs ml-1">(v{{ backendStatus.version || '?' }})</span>:</span>
               <span :class="backendStatus.status === 'ok' ? 'text-green-600 font-bold' : 'text-red-600 font-bold'">
                 {{ backendStatus.status || 'Загрузка...' }}
               </span>

@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="font-sans antialiased text-gray-800 bg-gray-50 min-h-screen pb-10">
+  <div id="app" class="font-sans antialiased text-gray-800 bg-gray-50 min-h-screen flex flex-col">
     <header class="bg-white shadow-sm p-4 mb-8 sticky top-0 z-10 border-b border-gray-200">
       <div class="max-w-3xl mx-auto flex justify-between items-center">
         <h1 class="text-2xl font-black text-blue-600 tracking-tight">vuExpert</h1>
@@ -10,12 +10,23 @@
       </div>
     </header>
 
-    <div class="px-5">
+    <div class="px-5 flex-grow">
       <RouterView />
     </div>
+
+    <!-- Версионирование -->
+    <footer class="text-center py-4 text-xs text-gray-400 mt-auto border-t border-gray-200">
+      Фронтенд v{{ appVersion }} | Сборка: {{ buildTime }}
+    </footer>
   </div>
 </template>
 
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
+// Глобальные константы внедряются Vite при сборке
+const appVersion = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0'
+const buildTime = typeof __BUILD_TIME__ !== 'undefined' 
+  ? new Date(__BUILD_TIME__).toLocaleString('ru-RU') 
+  : 'неизвестно'
 </script>

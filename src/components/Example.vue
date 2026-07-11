@@ -1,6 +1,6 @@
 <template>
   <section class="py-5">
-    <div class="max-w-3xl mx-auto p-4 my-5 bg-white border border-gray-200 rounded shadow-md">
+    <div class="max-w-3xl mx-auto p-4 my-5 bg-white border border-gray-200 rounded shadow-md text-center">
       <h2 class="text-2xl font-bold mb-2">{{ message }}</h2>
       <h2 class="mb-2">Пример использования Tailwind CSS</h2>
       <p class="text-lg md:text-xl text-green-500 my-4">Этот текст стилизован с использованием утилит Tailwind</p>

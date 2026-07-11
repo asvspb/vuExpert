@@ -18,8 +18,9 @@ from . import crud, schemas
 REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 
+APP_VERSION = os.getenv("APP_VERSION", "0.1.0")
 # Приложение FastAPI должно быть создано ДО регистрации обработчиков событий
-app = FastAPI(title="VueExpert Backend", version="0.1.0")
+app = FastAPI(title="VueExpert Backend", version=APP_VERSION)
 
 # Получаем разрешенные источники из переменной окружения
 cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:4173,http://localhost:5173").split(",")
@@ -62,7 +63,7 @@ async def health() -> dict:
     except Exception as exc:  # noqa: BLE001
         db_status = f"error: {exc}"
 
-    return {"status": "ok", "redis": redis_status, "database": db_status}
+    return {"status": "ok", "redis": redis_status, "database": db_status, "version": app.version}
 
 
 @app.get("/counter")
