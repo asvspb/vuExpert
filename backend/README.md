@@ -14,6 +14,7 @@
 - `Dockerfile` - Файл для создания Docker образа
 - `requirements.txt` - Зависимости Python
 - `poetry.lock` и `pyproject.toml` - Конфигурации для управления зависимостями (Poetry)
+- `.env` - Файл переменных окружения (включает настройки CORS и `APP_VERSION`)
 
 ## Для ИИ агентов
 

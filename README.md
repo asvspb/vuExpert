@@ -4,9 +4,9 @@ Full-stack проект на Vue 3 и FastAPI с использованием с
 
 ## Стек технологий
 
-*   **Frontend**: Vue 3 (Composition API), Vite, Tailwind CSS, Vitest, Playwright
+*   **Frontend**: Vue 3 (Composition API), Vite, Tailwind CSS v4, Vue Router, Pinia, Vitest, Playwright
 *   **Backend**: FastAPI, Poetry, SQLAlchemy (Async), PostgreSQL, Redis, Pytest
-*   **Инфраструктура**: Docker & docker-compose
+*   **Инфраструктура**: Docker & docker-compose, система версионирования сборок (Vite inject & FastAPI env)
 
 ## Архитектура и Лучшие практики
 
@@ -25,4 +25,10 @@ Full-stack проект на Vue 3 и FastAPI с использованием с
 docker-compose up -d --build
 ```
 
-Для прогона тестов бэкенда предусмотрен отдельный контейнер базы данных `postgres_test` (порт 5433, БД `vuexpert_test`).
+Для прогона тестов бэкенда предусмотрен отдельный контейнер базы данных `postgres_test` (порт 5433, БД `vuexpert_test`). 
+Основная база `postgres` пробрасывается на порт `5434` хост-машины во избежание конфликтов.
+
+## Версионирование
+В проекте настроен сквозной контроль версий сборок:
+- **Фронтенд**: Во время сборки в `vite.config.js` подтягивается версия из `package.json` и метка времени. Они внедряются в глобальные переменные (`__APP_VERSION__`, `__BUILD_TIME__`) и выводятся в футере (App.vue).
+- **Бэкенд**: FastAPI инстанцируется с версией из переменной `APP_VERSION` (по-умолчанию `0.1.0`), которая также отдается на эндпоинте `/health`. Фронтенд обращается к нему на дашборде `HomeView`.
