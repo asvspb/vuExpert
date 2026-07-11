@@ -56,33 +56,13 @@
 import { ref, onMounted } from 'vue'
 import Example from '../components/Example.vue'
 import { api } from '../services/api'
+import { useCounterApi } from '../composables/useCounterApi'
 
 const backendStatus = ref({})
-const redisCounter = ref(null)
+const { redisCounter, loadCounter, incrementRedis, resetRedis } = useCounterApi()
 
 const checkHealth = async () => {
   backendStatus.value = await api.getHealth()
-}
-
-const incrementRedis = async () => {
-  const data = await api.incrementCounter()
-  if (data && data.counter !== undefined) {
-    redisCounter.value = data.counter
-  }
-}
-
-const resetRedis = async () => {
-  const data = await api.resetCounter()
-  if (data && data.counter !== undefined) {
-    redisCounter.value = data.counter
-  }
-}
-
-const loadCounter = async () => {
-  const data = await api.getCounter()
-  if (data && data.counter !== undefined) {
-    redisCounter.value = data.counter
-  }
 }
 
 onMounted(() => {

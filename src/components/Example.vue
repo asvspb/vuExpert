@@ -2,7 +2,6 @@
   <section class="py-5">
     <div class="max-w-3xl mx-auto p-4 my-5 bg-white border border-gray-200 rounded shadow-md text-center">
       <h2 class="text-2xl font-bold mb-2">{{ message }}</h2>
-      <h2 class="mb-2">Пример использования Tailwind CSS</h2>
       <p class="text-lg md:text-xl text-green-500 my-4">Этот текст стилизован с использованием утилит Tailwind</p>
       
       <div class="p-4 bg-gray-50 rounded mt-4">
@@ -29,20 +28,26 @@
 <script setup>
 import { ref } from 'vue'
 
-const message = ref('Привет, Vue 3 + Tailwind!');
-const count = ref(0);
+const message = ref('Привет, Vue 3 + Tailwind!')
+const count = ref(0)
 const increment = () => {
-  count.value++;
-};
+  count.value++
+}
 const reset = () => {
-  count.value = 0;
-};
+  count.value = 0
+}
 const toggleMessage = () => {
-  message.value = message.value === 'Привет, Vue 3 + Tailwind!' ? 'Сообщение изменено!' : 'Привет, Vue 3 + Tailwind!';
-};
+  message.value = message.value === 'Привет, Vue 3 + Tailwind!' ? 'Сообщение изменено!' : 'Привет, Vue 3 + Tailwind!'
+}
 
-const isColorInverted = ref(false);
+const isColorInverted = ref(false)
 const toggleColor = () => {
-  isColorInverted.value = !isColorInverted.value;
-};
+  isColorInverted.value = !isColorInverted.value
+}
 </script>
+
+<style scoped>
+.invert {
+  filter: invert(100%);
+}
+</style>

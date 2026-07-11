@@ -14,6 +14,11 @@ const router = createRouter({
       name: 'about',
       // lazy-loaded route
       component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('../views/NotFoundView.vue')
     }
   ]
 })
