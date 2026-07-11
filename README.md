@@ -17,6 +17,7 @@ Full-stack проект на Vue 3 и FastAPI с использованием с
 *   `tdd-loop-v1.md` - Руководство по TDD
 *   `plan-then-execute-v1/` - Шаблоны для планирования задач
 
+Для фронтенда настроен `dependency-cruiser`. Вы можете проверить архитектуру командой `npm run lint:deps` или сгенерировать визуальный граф зависимостей командой `npm run depcruise:graph` (необходим Graphviz).
 ## Запуск проекта
 
 Используйте Docker Compose для локального запуска всех сервисов (Frontend, Backend, PostgreSQL, Redis):
