@@ -18,7 +18,9 @@
     "depcruise:graph": "depcruise src --include-only \"^src\" --output-type dot | dot -T svg > dependency-graph.svg"
   },
   "dependencies": {
-    "vue": "^3.5.39"
+    "pinia": "^3.0.4",
+    "vue": "^3.5.39",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
