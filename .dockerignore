@@ -6,8 +6,10 @@ yarn-error.log*
 
 # Vite / фронтенд-артефакты
 .DS_Store
-.dist
+dist
 coverage
+test-results
+playwright-report
 
 # IDE/OS
 .vscode
@@ -21,3 +23,8 @@ coverage
 .env.local
 .env.*.local
 
+# git and docs
+.git
+docs
+knowledge-packs
+e2e

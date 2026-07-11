@@ -12,7 +12,8 @@ export default [
       'coverage/**',
       'node_modules/**',
       'playwright-report/**',
-      'docs/**'
+      'docs/**',
+      'e2e/**'
     ]
   },
   {
@@ -28,7 +29,12 @@ export default [
         window: 'readonly',
         document: 'readonly',
         process: 'readonly',
-        URL: 'readonly'
+        URL: 'readonly',
+        console: 'readonly',
+        fetch: 'readonly',
+        navigator: 'readonly',
+        __APP_VERSION__: 'readonly',
+        __BUILD_TIME__: 'readonly'
       }
     },
     plugins: {
