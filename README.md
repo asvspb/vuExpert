@@ -4,7 +4,7 @@ Full-stack проект на Vue 3 и FastAPI с использованием с
 
 ## Стек технологий
 
-*   **Frontend**: Vue 3 (Composition API), Vite, SCSS, Vitest, Playwright
+*   **Frontend**: Vue 3 (Composition API), Vite, Tailwind CSS, Vitest, Playwright
 *   **Backend**: FastAPI, Poetry, SQLAlchemy (Async), PostgreSQL, Redis, Pytest
 *   **Инфраструктура**: Docker & docker-compose
 
